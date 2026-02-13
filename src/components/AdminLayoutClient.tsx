@@ -1,11 +1,18 @@
 "use client";
 
+import { usePathname } from "next/navigation";
 import { useState } from "react";
 import AdminSidebar from "@/components/AdminSidebar";
 import { Menu } from "lucide-react";
 
 export default function AdminLayoutClient({ children }: { children: React.ReactNode }) {
+    const pathname = usePathname();
     const [sidebarOpen, setSidebarOpen] = useState(false);
+
+    // If on login page, render without layout wrapper
+    if (pathname === '/admin/login') {
+        return <>{children}</>;
+    }
 
     return (
         <div className="min-h-screen bg-gray-50 flex">
