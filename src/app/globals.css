@@ -1,0 +1,82 @@
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&family=Playfair+Display:wght@400;500;600;700;800&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --font-display: 'Playfair Display', serif;
+  --font-sans: 'Montserrat', sans-serif;
+}
+
+.hero-pattern {
+  background-color: #332266;
+  background-image: url(https://lh3.googleusercontent.com/aida-public/AB6AXuBVvDukSZkhXkVfMPLw88crDAZ5JrpK6XTgAkssHZxQ48W6VUucepu0jAY8C7U7X86SRGlew-Wy_QA-0PmPCeSHEs8Jy9pszknzdZEsY_HYBIeFQD-EyypjWp_4wZ9ALF7MH_DX0xACC6JdEfBwHWkTE7bo9OwiT6lX6zlGFZSShidVmvTz60QWKQHPQUP0X39zcodY-vAM0-dAg_hYKpIIjtq2OSuCFhrVBFlpOH3CXR_pgA2nj8mtOYQ3s8CQIcAuz2Hh8p1wCPw)
+}
+
+.text-shadow {
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3)
+}
+
+* {
+  box-sizing: border-box;
+  padding: 0;
+  margin: 0;
+}
+
+html,
+body {
+  max-width: 100vw;
+  font-family: var(--font-sans), sans-serif;
+  background-color: #ffffff;
+  color: #333333;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-family: var(--font-display), serif;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+/* Utility Animations */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-fade-in {
+  animation: fadeIn 0.8s var(--ease-out) forwards;
+}
+
+/* Scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--background);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--secondary);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--primary);
+}
