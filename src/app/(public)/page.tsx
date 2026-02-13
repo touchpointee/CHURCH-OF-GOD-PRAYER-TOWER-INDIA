@@ -243,8 +243,8 @@ export default async function Home() {
                     )}
 
 
-                    <div className="bg-gray-50 rounded-xl p-4 flex items-center gap-6 border border-gray-100">
-                      <div className="w-24 h-24 bg-white p-2 rounded-lg border border-gray-200 flex-shrink-0 flex items-center justify-center overflow-hidden">
+                    <div className="bg-gray-50 rounded-xl p-4 md:p-6 flex flex-col md:flex-row items-center gap-4 md:gap-6 border border-gray-100 text-center md:text-left">
+                      <div className="w-full max-w-[280px] aspect-square md:w-32 md:h-32 bg-white p-2 rounded-lg border border-gray-200 flex-shrink-0 flex items-center justify-center overflow-hidden mx-auto md:mx-0 shadow-sm">
                         {/* QR Placeholder */}
                         {donation && donation.qrCodeUrl ? (
                           <img src={donation.qrCodeUrl} alt="QR Code" className="w-full h-full object-contain" />
@@ -254,9 +254,9 @@ export default async function Home() {
                           </div>
                         )}
                       </div>
-                      <div>
-                        <p className="font-bold text-gray-900 mb-1">Scan to Pay</p>
-                        <p className="text-xs text-gray-500 leading-snug">Use any UPI app to scan and donate directly to our church account.</p>
+                      <div className="w-full">
+                        <p className="font-bold text-gray-900 mb-2 md:mb-1 text-xl md:text-base">Scan to Pay</p>
+                        <p className="text-base md:text-xs text-gray-500 leading-snug">Use any UPI app to scan and donate directly to our church account.</p>
                       </div>
                     </div>
                   </div>
