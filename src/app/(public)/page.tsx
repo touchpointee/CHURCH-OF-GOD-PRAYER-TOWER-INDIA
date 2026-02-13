@@ -209,7 +209,7 @@ export default async function Home() {
 
               {/* Donation Card */}
               <div className="lg:w-1/2 w-full">
-                <div className="bg-white text-gray-900 rounded-3xl p-8 shadow-2xl max-w-md mx-auto relative overflow-hidden">
+                <div className="bg-white text-gray-900 rounded-3xl p-8 shadow-2xl max-w-lg mx-auto relative overflow-hidden">
                   <div className="absolute top-0 right-0 w-32 h-32 bg-gray-50 rounded-bl-full -mr-16 -mt-16 z-0"></div>
 
                   <div className="relative z-10">
@@ -244,7 +244,7 @@ export default async function Home() {
 
 
                     <div className="bg-gray-50 rounded-xl p-4 md:p-6 flex flex-col md:flex-row items-center gap-4 md:gap-6 border border-gray-100 text-center md:text-left">
-                      <div className="w-full max-w-[280px] aspect-square md:w-32 md:h-32 bg-white p-2 rounded-lg border border-gray-200 flex-shrink-0 flex items-center justify-center overflow-hidden mx-auto md:mx-0 shadow-sm">
+                      <div className="w-full max-w-[280px] aspect-square md:w-48 md:h-48 bg-white p-2 rounded-lg border border-gray-200 flex-shrink-0 flex items-center justify-center overflow-hidden mx-auto md:mx-0 shadow-sm">
                         {/* QR Placeholder */}
                         {donation && donation.qrCodeUrl ? (
                           <img src={donation.qrCodeUrl} alt="QR Code" className="w-full h-full object-contain" />
