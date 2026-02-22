@@ -1,9 +1,10 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import Link from "next/link";
 import axios from "axios";
 import { useForm } from "react-hook-form";
-import { Plus, Edit2, Trash2, MapPin, MessageSquare, Loader2 } from "lucide-react";
+import { Plus, Edit2, Trash2, MapPin, MessageSquare, Loader2, Phone, Mail } from "lucide-react";
 
 export default function AdminContactPage() {
     const [activeTab, setActiveTab] = useState<'locations' | 'messages'>('locations');
@@ -111,7 +112,26 @@ export default function AdminContactPage() {
 
     return (
         <div className="p-8 max-w-7xl mx-auto">
-            <h1 className="text-3xl font-bold mb-8">Contact Management</h1>
+            <h1 className="text-3xl font-bold mb-6">Contact Management</h1>
+
+            {/* Phone & Email notice */}
+            <div className="mb-8 p-4 rounded-xl bg-blue-50 border border-blue-100 flex flex-wrap items-center justify-between gap-4">
+                <div className="flex items-center gap-3 text-blue-800">
+                    <div className="p-2 rounded-lg bg-blue-100">
+                        <Mail size={20} className="text-blue-600" />
+                    </div>
+                    <div>
+                        <p className="font-bold text-sm">Contact phone numbers & emails</p>
+                        <p className="text-sm text-blue-700">These appear on the website footer and contact page. Manage them in Social Media & Contact settings.</p>
+                    </div>
+                </div>
+                <Link
+                    href="/admin/settings/social"
+                    className="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-primary text-white font-medium hover:bg-primary-dark transition-colors text-sm"
+                >
+                    <Phone size={18} /> Open Phone & Email settings
+                </Link>
+            </div>
 
             {/* Tabs */}
             <div className="flex gap-4 mb-8 border-b border-gray-200">

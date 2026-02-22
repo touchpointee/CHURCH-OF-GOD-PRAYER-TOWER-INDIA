@@ -26,7 +26,7 @@ export default function AdminSidebar({ isOpen, onClose }: SidebarProps) {
         { nameKey: 'admin.prayerRequests', href: '/admin/prayer-requests', icon: HandHeart },
         { nameKey: 'admin.statementOfFaith', href: '/admin/statement-of-faith', icon: FileText },
         { nameKey: 'admin.donationSettings', href: '/admin/donation', icon: CreditCard },
-        { nameKey: 'admin.socialMedia', href: '/admin/settings/social', icon: MessageCircle },
+        { nameKey: 'admin.socialMediaAndContact', href: '/admin/settings/social', icon: MessageCircle },
     ];
 
     const handleLogout = async () => {

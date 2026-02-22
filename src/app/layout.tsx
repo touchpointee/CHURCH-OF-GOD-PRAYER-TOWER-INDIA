@@ -6,7 +6,7 @@ export const metadata: Metadata = {
   title: "Church of God Prayer Tower India",
   description: 'A place of Faith, Hope & Community',
   icons: {
-    icon: '/logo.jpg',
+    icon: '/favicon.ico',
   },
 };
 
