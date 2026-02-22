@@ -1,12 +1,22 @@
 import { NextResponse } from 'next/server';
 import dbConnect from '@/lib/db';
 import Location from '@/models/Location';
+import { getLangFromRequest } from '@/lib/resolveLang';
+import { resolveField } from '@/lib/resolveLang';
 
-export async function GET() {
+export async function GET(request: Request) {
     await dbConnect();
     try {
-        const locations = await Location.find({}); // Sort or paginate if needed
-        return NextResponse.json({ success: true, data: locations });
+        const lang = getLangFromRequest(request);
+        const locations = await Location.find({});
+        const rawList = locations.map((l) => (l.toObject ? l.toObject() : { ...l }));
+        const data = rawList.map((raw: Record<string, unknown>) => ({
+            ...raw,
+            name: resolveField(raw, 'name', lang) ?? raw.name,
+            address: resolveField(raw, 'address', lang) ?? raw.address,
+            details: resolveField(raw, 'details', lang) ?? raw.details,
+        }));
+        return NextResponse.json({ success: true, data });
     } catch (error) {
         return NextResponse.json({ success: false, error: 'Failed to fetch locations' }, { status: 400 });
     }

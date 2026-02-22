@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
-import { Plus, Trash2, ExternalLink, Play } from 'lucide-react';
+import { Plus, Trash2, ExternalLink, Play, Pencil } from 'lucide-react';
 import axios from 'axios';
 
 export default function VideosManager() {
@@ -79,10 +79,14 @@ export default function VideosManager() {
                         </div>
                         <div className="p-5">
                             <div className="flex justify-between items-start mb-2">
-
-                                <button onClick={() => handleDelete(video._id)} className="text-gray-400 hover:text-red-500 transition-colors">
-                                    <Trash2 size={18} />
-                                </button>
+                                <div className="flex gap-2">
+                                    <Link href={`/admin/videos/${video._id}`} className="text-gray-400 hover:text-primary transition-colors">
+                                        <Pencil size={18} />
+                                    </Link>
+                                    <button onClick={() => handleDelete(video._id)} className="text-gray-400 hover:text-red-500 transition-colors">
+                                        <Trash2 size={18} />
+                                    </button>
+                                </div>
                             </div>
                             <h3 className="font-bold text-gray-900 mb-1 line-clamp-1">{video.title}</h3>
                             <p className="text-gray-500 text-xs">{new Date(video.createdAt).toLocaleDateString()}</p>

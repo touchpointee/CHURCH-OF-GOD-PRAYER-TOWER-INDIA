@@ -1,16 +1,21 @@
 import { NextResponse } from 'next/server';
 import dbConnect from '@/lib/db';
 import History from '@/models/History';
+import { getLangFromRequest } from '@/lib/resolveLang';
+import { resolveField } from '@/lib/resolveLang';
 
-export async function GET() {
+export async function GET(request: Request) {
     try {
         await dbConnect();
-        // Sort by year ascending, or we can use an 'order' field if we successfully implemented it. 
-        // For now, let's sort by year string (might need better logic if mixed formats, but standard years work)
-        // Or creation time. Let's rely on 'year' for display but sort by 'order' or 'year'.
-        // Let's standard sort by 'year'.
+        const lang = getLangFromRequest(request);
         const milestones = await History.find({}).sort({ year: 1 });
-        return NextResponse.json({ success: true, data: milestones });
+        const rawList = milestones.map((m) => (m.toObject ? m.toObject() : { ...m }));
+        const data = rawList.map((raw: Record<string, unknown>) => ({
+            ...raw,
+            title: resolveField(raw, 'title', lang) ?? raw.title,
+            description: resolveField(raw, 'description', lang) ?? raw.description,
+        }));
+        return NextResponse.json({ success: true, data });
     } catch (error: any) {
         return NextResponse.json({ success: false, error: error.message }, { status: 400 });
     }

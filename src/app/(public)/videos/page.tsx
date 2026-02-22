@@ -2,8 +2,10 @@
 
 import { Play, Clock, Share2, Heart } from "lucide-react";
 import { useState, useEffect } from "react";
+import { useLanguage } from "@/contexts/LanguageContext";
 
 export default function VideosPage() {
+    const { t, lang } = useLanguage();
     const [videos, setVideos] = useState([]);
     const [loading, setLoading] = useState(true);
     const [featuredVideo, setFeaturedVideo] = useState<any>(null);
@@ -11,12 +13,12 @@ export default function VideosPage() {
     useEffect(() => {
         const fetchVideos = async () => {
             try {
-                const res = await fetch('/api/videos');
+                const res = await fetch(`/api/videos?lang=${lang}`);
                 const data = await res.json();
                 if (data.success) {
                     setVideos(data.data);
                     if (data.data.length > 0) {
-                        setFeaturedVideo(data.data[0]); // Feature the latest video
+                        setFeaturedVideo(data.data[0]);
                     }
                 }
             } catch (error) {
@@ -26,15 +28,15 @@ export default function VideosPage() {
             }
         };
         fetchVideos();
-    }, []);
+    }, [lang]);
 
 
 
-    if (loading) return <div className="min-h-screen flex items-center justify-center">Loading...</div>;
+    if (loading) return <div className="min-h-screen flex items-center justify-center">{t("videos.loading")}</div>;
 
     const featured = featuredVideo || {
-        title: "No Videos Available",
-        description: "Please check back later.",
+        title: t("videos.noVideosAvailable"),
+        description: t("videos.noVideosYet"),
         thumbnailUrl: "https://via.placeholder.com/1920x1080"
     };
 
@@ -53,12 +55,12 @@ export default function VideosPage() {
 
                 <div className="container mx-auto px-4 h-full flex items-end pb-16 relative z-10">
                     <div className="max-w-3xl">
-                        <span className="bg-accent text-white text-xs font-bold px-3 py-1 rounded-sm mb-4 inline-block uppercase tracking-wider">Featured Video</span>
+                        <span className="bg-accent text-white text-xs font-bold px-3 py-1 rounded-sm mb-4 inline-block uppercase tracking-wider">{t("videos.featuredVideo")}</span>
                         <h1 className="text-4xl md:text-6xl font-display font-bold text-white mb-4 leading-tight">{featured.title}</h1>
                         <p className="text-gray-200 text-lg mb-8 line-clamp-2 max-w-2xl">{featured.description}</p>
                         <div className="flex gap-4">
                             <a href={featured.youtubeUrl} target="_blank" className="bg-white text-black font-bold px-8 py-3 rounded-full hover:bg-gray-200 transition flex items-center gap-2">
-                                <Play size={20} fill="currentColor" /> Watch Now
+                                <Play size={20} fill="currentColor" /> {t("videos.watchNow")}
                             </a>
                         </div>
                     </div>
@@ -99,8 +101,8 @@ export default function VideosPage() {
                             <div className="w-20 h-20 bg-gray-50 rounded-full flex items-center justify-center mx-auto mb-6">
                                 <Play size={40} className="text-gray-300" />
                             </div>
-                            <h3 className="text-2xl font-bold text-gray-900 mb-2">No Videos Available</h3>
-                            <p className="text-gray-500 max-w-sm mx-auto">We haven't uploaded any videos yet. Check back soon for new sermons and content.</p>
+                            <h3 className="text-2xl font-bold text-gray-900 mb-2">{t("videos.noVideosAvailable")}</h3>
+                            <p className="text-gray-500 max-w-sm mx-auto">{t("videos.noVideosYet")}</p>
                         </div>
                     )}
                 </div>

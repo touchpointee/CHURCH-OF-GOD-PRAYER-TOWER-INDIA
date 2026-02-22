@@ -21,6 +21,10 @@ export default function AdminStatementOfFaithPage() {
 
     const [verseText, setVerseText] = useState("");
     const [verseRef, setVerseRef] = useState("");
+    const [verseTextHi, setVerseTextHi] = useState("");
+    const [verseTextMl, setVerseTextMl] = useState("");
+    const [verseRefHi, setVerseRefHi] = useState("");
+    const [verseRefMl, setVerseRefMl] = useState("");
     const [updatingVerse, setUpdatingVerse] = useState(false);
 
     useEffect(() => {
@@ -32,8 +36,13 @@ export default function AdminStatementOfFaithPage() {
         try {
             const res = await axios.get('/api/scriptures?key=statement-of-faith');
             if (res.data.success && res.data.data) {
-                setVerseText(res.data.data.text);
-                setVerseRef(res.data.data.reference);
+                const d = res.data.data;
+                setVerseText(d.text ?? "");
+                setVerseRef(d.reference ?? "");
+                setVerseTextHi(d.textHi ?? "");
+                setVerseTextMl(d.textMl ?? "");
+                setVerseRefHi(d.referenceHi ?? "");
+                setVerseRefMl(d.referenceMl ?? "");
             }
         } catch (error) {
             console.error("Failed to fetch verse", error);
@@ -47,7 +56,11 @@ export default function AdminStatementOfFaithPage() {
             await axios.post('/api/scriptures', {
                 key: 'statement-of-faith',
                 text: verseText,
-                reference: verseRef
+                reference: verseRef,
+                textHi: verseTextHi || undefined,
+                textMl: verseTextMl || undefined,
+                referenceHi: verseRefHi || undefined,
+                referenceMl: verseRefMl || undefined,
             });
             alert("Verse updated successfully!");
         } catch (error) {
@@ -89,6 +102,8 @@ export default function AdminStatementOfFaithPage() {
     const handleEdit = (belief: Belief) => {
         setEditingId(belief._id);
         setValue('content', belief.content);
+        setValue('contentHi', belief.contentHi ?? '');
+        setValue('contentMl', belief.contentMl ?? '');
         setValue('order', belief.order);
         setIsAdding(true);
     };
@@ -111,27 +126,29 @@ export default function AdminStatementOfFaithPage() {
             <div className="bg-white p-6 rounded-xl border border-gray-200 shadow-sm mb-12">
                 <h2 className="text-xl font-bold mb-4">Highlighted Scripture</h2>
                 <form onSubmit={handleVerseSubmit} className="space-y-4">
-                    <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-                        <div className="md:col-span-3">
-                            <label className="block text-sm font-bold text-gray-700 mb-2">Verse Text</label>
-                            <input
-                                type="text"
-                                value={verseText}
-                                onChange={(e) => setVerseText(e.target.value)}
-                                className="w-full px-4 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-black/5 outline-none"
-                                placeholder="For God so loved the world..."
-                            />
-                        </div>
-                        <div>
-                            <label className="block text-sm font-bold text-gray-700 mb-2">Reference</label>
-                            <input
-                                type="text"
-                                value={verseRef}
-                                onChange={(e) => setVerseRef(e.target.value)}
-                                className="w-full px-4 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-black/5 outline-none"
-                                placeholder="John 3:16"
-                            />
-                        </div>
+                    <div>
+                        <label className="block text-sm font-bold text-gray-700 mb-2">Verse Text (English)</label>
+                        <input type="text" value={verseText} onChange={(e) => setVerseText(e.target.value)} className="w-full px-4 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-black/5 outline-none" placeholder="For God so loved the world..." />
+                    </div>
+                    <div>
+                        <label className="block text-sm font-bold text-gray-700 mb-2">Verse Text (Hindi)</label>
+                        <input type="text" value={verseTextHi} onChange={(e) => setVerseTextHi(e.target.value)} className="w-full px-4 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-black/5 outline-none" placeholder="हिंदी में पाठ" />
+                    </div>
+                    <div>
+                        <label className="block text-sm font-bold text-gray-700 mb-2">Verse Text (Malayalam)</label>
+                        <input type="text" value={verseTextMl} onChange={(e) => setVerseTextMl(e.target.value)} className="w-full px-4 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-black/5 outline-none" placeholder="മലയാളത്തിൽ പാഠം" />
+                    </div>
+                    <div>
+                        <label className="block text-sm font-bold text-gray-700 mb-2">Reference (English)</label>
+                        <input type="text" value={verseRef} onChange={(e) => setVerseRef(e.target.value)} className="w-full px-4 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-black/5 outline-none" placeholder="John 3:16" />
+                    </div>
+                    <div>
+                        <label className="block text-sm font-bold text-gray-700 mb-2">Reference (Hindi)</label>
+                        <input type="text" value={verseRefHi} onChange={(e) => setVerseRefHi(e.target.value)} className="w-full px-4 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-black/5 outline-none" placeholder="हिंदी में संदर्भ" />
+                    </div>
+                    <div>
+                        <label className="block text-sm font-bold text-gray-700 mb-2">Reference (Malayalam)</label>
+                        <input type="text" value={verseRefMl} onChange={(e) => setVerseRefMl(e.target.value)} className="w-full px-4 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-black/5 outline-none" placeholder="മലയാളത്തിൽ റഫറൻസ്" />
                     </div>
                     <div className="flex justify-end">
                         <button
@@ -166,13 +183,16 @@ export default function AdminStatementOfFaithPage() {
                     <h3 className="font-bold text-lg mb-4">{editingId ? 'Edit Point' : 'Add New Point'}</h3>
                     <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
                         <div>
-                            <label className="block text-sm font-bold text-gray-700 mb-2">Content</label>
-                            <textarea
-                                {...register("content", { required: true })}
-                                rows={4}
-                                className="w-full px-4 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-black/5 outline-none"
-                                placeholder="Enter belief description..."
-                            ></textarea>
+                            <label className="block text-sm font-bold text-gray-700 mb-2">Content (English)</label>
+                            <textarea {...register("content", { required: true })} rows={4} className="w-full px-4 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-black/5 outline-none" placeholder="Enter belief description..."></textarea>
+                        </div>
+                        <div>
+                            <label className="block text-sm font-bold text-gray-700 mb-2">Content (Hindi)</label>
+                            <textarea {...register("contentHi")} rows={4} className="w-full px-4 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-black/5 outline-none" placeholder="हिंदी में विवरण"></textarea>
+                        </div>
+                        <div>
+                            <label className="block text-sm font-bold text-gray-700 mb-2">Content (Malayalam)</label>
+                            <textarea {...register("contentMl")} rows={4} className="w-full px-4 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-black/5 outline-none" placeholder="മലയാളത്തിൽ വിവരണം"></textarea>
                         </div>
                         <div className="flex justify-end">
                             <button

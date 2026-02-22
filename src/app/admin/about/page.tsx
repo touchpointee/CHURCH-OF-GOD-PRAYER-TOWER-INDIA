@@ -26,7 +26,11 @@ export default function ManageAboutPage() {
                 setValue('founderName', data.founderName || 'Pastor P M Joseph');
                 setValue('founderImage', data.founderImage || '');
                 setValue('title', data.title || 'Who we are?');
+                setValue('titleHi', data.titleHi || '');
+                setValue('titleMl', data.titleMl || '');
                 setValue('content', data.content || '');
+                setValue('contentHi', data.contentHi || '');
+                setValue('contentMl', data.contentMl || '');
             }
         } catch (error) {
             console.error('Failed to fetch about data', error);
@@ -138,7 +142,7 @@ export default function ManageAboutPage() {
                         <h2 className="text-xl font-bold text-gray-800 border-b pb-2">Page Content</h2>
 
                         <div>
-                            <label className="block text-sm font-bold text-gray-700 mb-1">Title</label>
+                            <label className="block text-sm font-bold text-gray-700 mb-1">Title (English)</label>
                             <input
                                 {...register('title', { required: true })}
                                 className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:border-accent outline-none"
@@ -146,16 +150,48 @@ export default function ManageAboutPage() {
                             />
                             {errors.title && <span className="text-red-500 text-xs">Required</span>}
                         </div>
+                        <div>
+                            <label className="block text-sm font-bold text-gray-700 mb-1">Title (Hindi)</label>
+                            <input
+                                {...register('titleHi')}
+                                className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:border-accent outline-none"
+                                placeholder="हिंदी में शीर्षक"
+                            />
+                        </div>
+                        <div>
+                            <label className="block text-sm font-bold text-gray-700 mb-1">Title (Malayalam)</label>
+                            <input
+                                {...register('titleMl')}
+                                className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:border-accent outline-none"
+                                placeholder="മലയാളത്തിൽ ശീർഷകം"
+                            />
+                        </div>
 
                         <div>
-                            <label className="block text-sm font-bold text-gray-700 mb-1">Description / Paragraphs</label>
+                            <label className="block text-sm font-bold text-gray-700 mb-1">Content (English)</label>
                             <textarea
                                 {...register('content', { required: true })}
-                                className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:border-accent outline-none min-h-[300px]"
+                                className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:border-accent outline-none min-h-[200px]"
                                 placeholder="Enter the main content here..."
                             ></textarea>
                             {errors.content && <span className="text-red-500 text-xs">Required</span>}
-                            <p className="text-xs text-gray-400 mt-1">HTML is not supported, effectively just text. Use double newlines for paragraphs.</p>
+                            <p className="text-xs text-gray-400 mt-1">Use double newlines for paragraphs.</p>
+                        </div>
+                        <div>
+                            <label className="block text-sm font-bold text-gray-700 mb-1">Content (Hindi)</label>
+                            <textarea
+                                {...register('contentHi')}
+                                className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:border-accent outline-none min-h-[200px]"
+                                placeholder="हिंदी में सामग्री"
+                            ></textarea>
+                        </div>
+                        <div>
+                            <label className="block text-sm font-bold text-gray-700 mb-1">Content (Malayalam)</label>
+                            <textarea
+                                {...register('contentMl')}
+                                className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:border-accent outline-none min-h-[200px]"
+                                placeholder="മലയാളത്തിൽ ഉള്ളടക്കം"
+                            ></textarea>
                         </div>
                     </div>
 

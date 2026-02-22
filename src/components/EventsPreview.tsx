@@ -1,9 +1,9 @@
 "use client";
 
 import Link from "next/link";
-
 import { motion } from "framer-motion";
 import { ArrowRight, Calendar, MapPin } from "lucide-react";
+import { useLanguage } from "@/contexts/LanguageContext";
 
 
 const events = [
@@ -24,15 +24,16 @@ const events = [
 ];
 
 export default function EventsPreview() {
+    const { t } = useLanguage();
     return (
         <section className="relative bg-stone-900 py-32 overflow-hidden text-white">
             <div className="container mx-auto px-6 mb-16 flex items-end justify-between">
                 <div>
-                    <h2 className="text-4xl md:text-5xl font-serif font-bold text-white mb-4">Gatherings</h2>
-                    <p className="text-stone-400 max-w-md font-light">Join us for worship, community, and deeper connection.</p>
+                    <h2 className="text-4xl md:text-5xl font-serif font-bold text-white mb-4">{t("eventsPreview.gatherings")}</h2>
+                    <p className="text-stone-400 max-w-md font-light">{t("eventsPreview.joinUsWorship")}</p>
                 </div>
                 <Link href="/events" className="hidden md:flex items-center text-amber-500 text-sm font-bold uppercase tracking-widest hover:text-white transition-colors">
-                    View Calendar <ArrowRight className="ml-2 w-4 h-4" />
+                    {t("eventsPreview.viewCalendar")} <ArrowRight className="ml-2 w-4 h-4" />
                 </Link>
             </div>
 
@@ -59,7 +60,7 @@ export default function EventsPreview() {
                             <span className="text-xs text-amber-500 font-bold uppercase tracking-widest mb-2 block">{event.location}</span>
                             <h3 className="text-3xl font-serif font-bold text-white mb-2 leading-none group-hover:text-amber-500 transition-colors">{event.title}</h3>
                             <div className="flex items-center text-stone-500 text-sm mt-3 group-hover:text-white transition-colors">
-                                <span className="mr-2">Learn More</span> <ArrowRight size={12} />
+                                <span className="mr-2">{t("eventsPreview.learnMore")}</span> <ArrowRight size={12} />
                             </div>
                         </div>
                     </div>

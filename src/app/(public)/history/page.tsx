@@ -3,18 +3,20 @@
 import { useState, useEffect } from "react";
 import axios from "axios";
 import { Calendar, Clock, Award } from "lucide-react";
+import { useLanguage } from "@/contexts/LanguageContext";
 
 export default function HistoryPage() {
+    const { t, lang } = useLanguage();
     const [milestones, setMilestones] = useState<any[]>([]);
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
         fetchHistory();
-    }, []);
+    }, [lang]);
 
     const fetchHistory = async () => {
         try {
-            const res = await axios.get('/api/history');
+            const res = await axios.get(`/api/history?lang=${lang}`);
             if (res.data.success) {
                 setMilestones(res.data.data);
             }
@@ -30,8 +32,8 @@ export default function HistoryPage() {
 
             {/* Hero Section */}
             <section className="bg-white text-gray-900 pt-12 pb-6 px-4 text-center border-b border-gray-100">
-                <h1 className="text-4xl md:text-5xl font-display font-bold mb-4">Our Journey of Faith</h1>
-                <p className="text-gray-500 max-w-2xl mx-auto">From humble beginnings to a global ministry, witness how God has led us every step of the way.</p>
+                <h1 className="text-4xl md:text-5xl font-display font-bold mb-4">{t("history.ourJourney")}</h1>
+                <p className="text-gray-500 max-w-2xl mx-auto">{t("history.subtitle")}</p>
             </section>
 
             {/* Timeline */}

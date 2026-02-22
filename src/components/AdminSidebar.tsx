@@ -3,6 +3,7 @@
 import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
 import { LayoutDashboard, Calendar, Video, Image as ImageIcon, LogOut, Home, Info, History as HistoryIcon, Mail, Heart, FileText, X, CreditCard, HandHeart, MessageCircle } from 'lucide-react';
+import { useLanguage } from '@/contexts/LanguageContext';
 
 interface SidebarProps {
     isOpen: boolean;
@@ -13,18 +14,19 @@ export default function AdminSidebar({ isOpen, onClose }: SidebarProps) {
     const pathname = usePathname();
     const router = useRouter();
 
+    const { t } = useLanguage();
     const menuItems = [
-        { name: 'Dashboard', href: '/admin', icon: LayoutDashboard },
-        { name: 'Events', href: '/admin/events', icon: Calendar },
-        { name: 'Videos', href: '/admin/videos', icon: Video },
-        { name: 'Gallery', href: '/admin/gallery', icon: ImageIcon },
-        { name: 'About Us', href: '/admin/about', icon: Info },
-        { name: 'History', href: '/admin/history', icon: HistoryIcon },
-        { name: 'Contact', href: '/admin/contact', icon: Mail },
-        { name: 'Prayer Requests', href: '/admin/prayer-requests', icon: HandHeart },
-        { name: 'Statement of Faith', href: '/admin/statement-of-faith', icon: FileText },
-        { name: 'Donation Settings', href: '/admin/donation', icon: CreditCard },
-        { name: 'Social Media', href: '/admin/settings/social', icon: MessageCircle },
+        { nameKey: 'admin.dashboard', href: '/admin', icon: LayoutDashboard },
+        { nameKey: 'admin.events', href: '/admin/events', icon: Calendar },
+        { nameKey: 'admin.videos', href: '/admin/videos', icon: Video },
+        { nameKey: 'admin.gallery', href: '/admin/gallery', icon: ImageIcon },
+        { nameKey: 'admin.aboutUs', href: '/admin/about', icon: Info },
+        { nameKey: 'admin.history', href: '/admin/history', icon: HistoryIcon },
+        { nameKey: 'admin.contact', href: '/admin/contact', icon: Mail },
+        { nameKey: 'admin.prayerRequests', href: '/admin/prayer-requests', icon: HandHeart },
+        { nameKey: 'admin.statementOfFaith', href: '/admin/statement-of-faith', icon: FileText },
+        { nameKey: 'admin.donationSettings', href: '/admin/donation', icon: CreditCard },
+        { nameKey: 'admin.socialMedia', href: '/admin/settings/social', icon: MessageCircle },
     ];
 
     const handleLogout = async () => {
@@ -55,7 +57,7 @@ export default function AdminSidebar({ isOpen, onClose }: SidebarProps) {
                 <div className="p-6 border-b border-gray-100 flex items-center justify-between">
                     <div className="flex items-center gap-3">
                         <div className="w-8 h-8 rounded-full bg-primary flex items-center justify-center text-white font-bold">A</div>
-                        <span className="font-display font-bold text-xl text-gray-900">Admin Portal</span>
+                        <span className="font-display font-bold text-xl text-gray-900">{t('admin.portal')}</span>
                     </div>
                     <button onClick={onClose} className="md:hidden text-gray-500 hover:text-gray-900">
                         <X size={24} />
@@ -70,14 +72,14 @@ export default function AdminSidebar({ isOpen, onClose }: SidebarProps) {
                             <Link
                                 key={item.href}
                                 href={item.href}
-                                onClick={() => onClose()} // Auto-close on mobile nav
+                                onClick={() => onClose()}
                                 className={`flex items-center gap-3 px-4 py-3 rounded-xl transition-all ${isActive
                                     ? 'bg-primary text-white shadow-lg shadow-primary/20 font-medium'
                                     : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900'
                                     }`}
                             >
                                 <Icon size={20} />
-                                {item.name}
+                                {t(item.nameKey)}
                             </Link>
                         );
                     })}
@@ -89,14 +91,14 @@ export default function AdminSidebar({ isOpen, onClose }: SidebarProps) {
                         className="flex items-center gap-3 px-4 py-3 rounded-xl text-gray-600 hover:bg-gray-50 hover:text-gray-900 transition-colors"
                     >
                         <Home size={20} />
-                        View Website
+                        {t('admin.viewWebsite')}
                     </Link>
                     <button
                         onClick={handleLogout}
                         className="w-full flex items-center gap-3 px-4 py-3 rounded-xl text-red-600 hover:bg-red-50 transition-colors text-left"
                     >
                         <LogOut size={20} />
-                        Sign Out
+                        {t('admin.signOut')}
                     </button>
                 </div>
             </aside>

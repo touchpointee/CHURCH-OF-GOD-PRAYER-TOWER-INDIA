@@ -2,8 +2,10 @@
 
 import Link from "next/link";
 import { ArrowRight, ChevronRight, Play } from "lucide-react";
+import { useLanguage } from "@/contexts/LanguageContext";
 
 export default function CharitySection() {
+    const { t } = useLanguage();
     return (
         <section className="relative py-32 bg-stone-900 text-white overflow-hidden">
             <div className="container mx-auto px-6 md:px-12">
@@ -28,22 +30,22 @@ export default function CharitySection() {
 
                     {/* Content Area */}
                     <div className="flex-1 lg:pl-10">
-                        <span className="text-amber-500 font-bold tracking-[0.2em] uppercase text-xs mb-6 block">Outreach</span>
+                        <span className="text-amber-500 font-bold tracking-[0.2em] uppercase text-xs mb-6 block">{t("charitySection.outreach")}</span>
                         <h2 className="text-4xl md:text-5xl font-serif font-bold mb-8 leading-tight">
-                            Hands and Feet <br /> of Jesus.
+                            {t("charitySection.handsAndFeetOfJesus")}
                         </h2>
                         <p className="text-stone-400 text-lg mb-10 font-light leading-relaxed">
-                            From local food drives to global mission trips, we are committed to serving those in need. See how we are making an impact.
+                            {t("charitySection.paragraph")}
                         </p>
 
                         <div className="flex gap-8">
                             <div className="flex flex-col">
                                 <span className="text-3xl font-serif font-bold text-white mb-1">12K</span>
-                                <span className="text-xs text-stone-500 uppercase tracking-widest">Lives Impacted</span>
+                                <span className="text-xs text-stone-500 uppercase tracking-widest">{t("charitySection.livesImpacted")}</span>
                             </div>
                             <div className="flex flex-col">
                                 <span className="text-3xl font-serif font-bold text-white mb-1">$2M</span>
-                                <span className="text-xs text-stone-500 uppercase tracking-widest">Given Away</span>
+                                <span className="text-xs text-stone-500 uppercase tracking-widest">{t("charitySection.givenAway")}</span>
                             </div>
                         </div>
                     </div>

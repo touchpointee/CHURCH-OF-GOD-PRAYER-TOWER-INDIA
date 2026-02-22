@@ -3,8 +3,10 @@
 import { ZoomIn, X } from "lucide-react";
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
+import { useLanguage } from "@/contexts/LanguageContext";
 
 export default function ImagesPage() {
+    const { t, lang } = useLanguage();
     const [images, setImages] = useState([]);
     const [loading, setLoading] = useState(true);
     const [selectedImage, setSelectedImage] = useState<any>(null);
@@ -12,7 +14,7 @@ export default function ImagesPage() {
     useEffect(() => {
         const fetchImages = async () => {
             try {
-                const res = await fetch('/api/gallery');
+                const res = await fetch(`/api/gallery?lang=${lang}`);
                 const data = await res.json();
                 if (data.success) {
                     setImages(data.data);
@@ -24,9 +26,9 @@ export default function ImagesPage() {
             }
         };
         fetchImages();
-    }, []);
+    }, [lang]);
 
-    if (loading) return <div className="min-h-screen flex items-center justify-center">Loading...</div>;
+    if (loading) return <div className="min-h-screen flex items-center justify-center">{t("gallery.loading")}</div>;
 
     return (
         <div className="min-h-screen bg-white font-sans">
@@ -58,8 +60,8 @@ export default function ImagesPage() {
                             <div className="w-20 h-20 bg-white rounded-full flex items-center justify-center mx-auto mb-6 shadow-sm">
                                 <ZoomIn size={40} className="text-gray-300" />
                             </div>
-                            <h3 className="text-2xl font-bold text-gray-900 mb-2">No Gallery Images</h3>
-                            <p className="text-gray-500 max-w-sm mx-auto">Our gallery is currently empty. We'll be adding beautiful moments from our church life soon.</p>
+                            <h3 className="text-2xl font-bold text-gray-900 mb-2">{t("gallery.noGalleryImages")}</h3>
+                            <p className="text-gray-500 max-w-sm mx-auto">{t("gallery.emptyGallery")}</p>
                         </div>
                     )}
                 </div>

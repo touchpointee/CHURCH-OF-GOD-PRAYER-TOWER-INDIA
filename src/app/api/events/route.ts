@@ -1,12 +1,22 @@
 import { NextResponse } from 'next/server';
 import dbConnect from '@/lib/db';
 import Event from '@/models/Event';
+import { getLangFromRequest } from '@/lib/resolveLang';
+import { resolveField } from '@/lib/resolveLang';
 
-export async function GET() {
+export async function GET(request: Request) {
     try {
         await dbConnect();
+        const lang = getLangFromRequest(request);
         const events = await Event.find({}).sort({ date: 1 });
-        return NextResponse.json({ success: true, data: events });
+        const rawList = events.map((e) => (e.toObject ? e.toObject() : { ...e }));
+        const data = rawList.map((raw: Record<string, unknown>) => ({
+            ...raw,
+            title: resolveField(raw, 'title', lang) ?? raw.title,
+            description: resolveField(raw, 'description', lang) ?? raw.description,
+            location: resolveField(raw, 'location', lang) ?? raw.location,
+        }));
+        return NextResponse.json({ success: true, data });
     } catch (error: any) {
         return NextResponse.json({ success: false, error: error.message }, { status: 500 });
     }

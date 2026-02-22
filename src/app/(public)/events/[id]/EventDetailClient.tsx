@@ -3,8 +3,10 @@
 import { Clock, MapPin, Calendar, ArrowLeft, Share2 } from "lucide-react";
 import Link from "next/link";
 import { useEffect, useState } from "react";
+import { useLanguage } from "@/contexts/LanguageContext";
 
 export default function EventDetailClient({ id }: { id: string }) {
+    const { t, lang } = useLanguage();
     const [event, setEvent] = useState<any>(null);
     const [loading, setLoading] = useState(true);
     const [showModal, setShowModal] = useState(false);
@@ -78,7 +80,7 @@ END:VCALENDAR`;
     useEffect(() => {
         const fetchEvent = async () => {
             try {
-                const res = await fetch(`/api/events/${id}`);
+                const res = await fetch(`/api/events/${id}?lang=${lang}`);
                 const data = await res.json();
                 if (data.success) {
                     setEvent(data.data);
@@ -90,16 +92,16 @@ END:VCALENDAR`;
             }
         };
         fetchEvent();
-    }, [id]);
+    }, [id, lang]);
 
-    if (loading) return <div className="min-h-screen flex items-center justify-center">Loading...</div>;
+    if (loading) return <div className="min-h-screen flex items-center justify-center">{t("events.loading")}</div>;
 
     if (!event) {
         return (
             <div className="min-h-screen flex items-center justify-center">
                 <div className="text-center">
-                    <h1 className="text-2xl font-bold mb-4">Event Not Found</h1>
-                    <Link href="/events" className="text-primary hover:underline">Back to Events</Link>
+                    <h1 className="text-2xl font-bold mb-4">{t("events.eventNotFound")}</h1>
+                    <Link href="/events" className="text-primary hover:underline">{t("events.backToEvents")}</Link>
                 </div>
             </div>
         );
@@ -118,7 +120,7 @@ END:VCALENDAR`;
                 <div className="absolute inset-0 bg-gradient-to-t from-black via-black/40 to-transparent"></div>
                 <div className="absolute top-0 left-0 p-6 z-10">
                     <Link href="/events" className="flex items-center text-white/80 hover:text-white transition-colors bg-black/20 backdrop-blur-md px-4 py-2 rounded-full">
-                        <ArrowLeft size={20} className="mr-2" /> Back to Events
+                        <ArrowLeft size={20} className="mr-2" /> {t("events.backToEvents")}
                     </Link>
                 </div>
 
@@ -148,14 +150,14 @@ END:VCALENDAR`;
             {/* Content */}
             <div className="container mx-auto px-4 py-12 grid grid-cols-1 lg:grid-cols-3 gap-12">
                 <div className="lg:col-span-2">
-                    <h2 className="text-2xl font-display font-bold text-gray-900 mb-6">About the Event</h2>
+                    <h2 className="text-2xl font-display font-bold text-gray-900 mb-6">{t("events.aboutTheEvent")}</h2>
                     <div className="text-gray-600 text-lg leading-relaxed mb-8 whitespace-pre-wrap">
                         {event.description}
                     </div>
 
                     <div className="bg-gray-50 p-8 rounded-2xl border border-gray-100 flex items-center justify-between mt-12">
                         <div>
-                            <h3 className="font-bold text-xl text-gray-900 mb-1">Share this Event</h3>
+                            <h3 className="font-bold text-xl text-gray-900 mb-1">{t("events.shareThisEvent")}</h3>
                             <p className="text-gray-500 text-sm">Spread the word to your friends and family.</p>
                         </div>
                         <button className="flex items-center gap-2 bg-white border border-gray-200 hover:border-primary hover:text-primary text-gray-700 font-bold px-6 py-3 rounded-full transition-all shadow-sm">
@@ -167,7 +169,7 @@ END:VCALENDAR`;
                 {/* Sidebar */}
                 <div className="lg:col-span-1">
                     <div className="bg-white rounded-2xl shadow-lg border border-gray-100 p-8 sticky top-24">
-                        <h3 className="text-xl font-bold font-display text-gray-900 mb-6">Event Details</h3>
+                        <h3 className="text-xl font-bold font-display text-gray-900 mb-6">{t("events.eventDetails")}</h3>
 
                         <div className="space-y-6">
                             <div>

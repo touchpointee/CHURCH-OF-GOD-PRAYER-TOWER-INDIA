@@ -5,6 +5,8 @@ const VideoSchema = new mongoose.Schema({
         type: String,
         required: [true, 'Please provide a title for this video.'],
     },
+    titleHi: { type: String },
+    titleMl: { type: String },
     youtubeUrl: {
         type: String,
         required: [true, 'Please provide a YouTube URL.'],

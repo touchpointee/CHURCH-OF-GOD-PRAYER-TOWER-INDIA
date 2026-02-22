@@ -3,8 +3,10 @@
 import { useState, useEffect } from "react";
 import axios from "axios";
 import { Book, Heart, Users, Globe, Sun, Anchor } from "lucide-react";
+import { useLanguage } from "@/contexts/LanguageContext";
 
 export default function StatementOfFaithPage() {
+    const { t, lang } = useLanguage();
     const [beliefs, setBeliefs] = useState<string[]>([]);
     const [loading, setLoading] = useState(true);
 
@@ -27,19 +29,17 @@ export default function StatementOfFaithPage() {
         reference: "John 3:16"
     });
 
+    const { t, lang } = useLanguage();
     useEffect(() => {
         const fetchData = async () => {
             try {
-                // Fetch points
-                const beliefsRes = await axios.get('/api/statement-of-faith');
+                const beliefsRes = await axios.get(`/api/statement-of-faith?lang=${lang}`);
                 if (beliefsRes.data.success && beliefsRes.data.data.length > 0) {
                     setBeliefs(beliefsRes.data.data.map((item: any) => item.content));
                 } else {
                     setBeliefs(initialBeliefs);
                 }
-
-                // Fetch scripture
-                const scriptureRes = await axios.get('/api/scriptures?key=statement-of-faith');
+                const scriptureRes = await axios.get(`/api/scriptures?key=statement-of-faith&lang=${lang}`);
                 if (scriptureRes.data.success && scriptureRes.data.data) {
                     setScripture({
                         text: scriptureRes.data.data.text,
@@ -53,9 +53,8 @@ export default function StatementOfFaithPage() {
                 setLoading(false);
             }
         };
-
         fetchData();
-    }, []);
+    }, [lang]);
 
     return (
         <div className="min-h-screen bg-white font-sans">
@@ -64,6 +63,7 @@ export default function StatementOfFaithPage() {
             {/* Beliefs List */}
             <section className="py-20 px-4">
                 <div className="container mx-auto max-w-5xl">
+                    <h1 className="text-4xl font-display font-bold text-gray-900 mb-12 text-center">{t("statementOfFaith.title")}</h1>
                     <div className="space-y-8">
                         {beliefs.map((belief, idx) => (
                             <div key={idx} className="flex gap-4">

@@ -64,8 +64,14 @@ export default function AdminContactPage() {
         setIsEditing(true);
         setEditingId(location._id);
         setValue('name', location.name);
+        setValue('nameHi', location.nameHi ?? '');
+        setValue('nameMl', location.nameMl ?? '');
         setValue('address', location.address);
+        setValue('addressHi', location.addressHi ?? '');
+        setValue('addressMl', location.addressMl ?? '');
         setValue('details', location.details);
+        setValue('detailsHi', location.detailsHi ?? '');
+        setValue('detailsMl', location.detailsMl ?? '');
     };
 
     const handleDelete = async (id: string) => {
@@ -81,7 +87,7 @@ export default function AdminContactPage() {
     const resetForm = () => {
         setIsEditing(false);
         setEditingId(null);
-        reset({ name: '', address: '', details: '' });
+        reset({ name: '', nameHi: '', nameMl: '', address: '', addressHi: '', addressMl: '', details: '', detailsHi: '', detailsMl: '' });
     };
 
     return (
@@ -132,16 +138,40 @@ export default function AdminContactPage() {
                         <h3 className="font-bold text-xl mb-6">{isEditing ? 'Edit Location' : 'Add New Location'}</h3>
                         <form onSubmit={handleSubmit(onSubmitLocation)} className="space-y-4">
                             <div>
-                                <label className="block text-sm font-bold text-gray-700 mb-1">Location Name</label>
+                                <label className="block text-sm font-bold text-gray-700 mb-1">Location Name (English)</label>
                                 <input {...register('name', { required: true })} className="w-full border rounded-lg p-2" placeholder="e.g. City Center Branch" />
                             </div>
                             <div>
-                                <label className="block text-sm font-bold text-gray-700 mb-1">Address</label>
+                                <label className="block text-sm font-bold text-gray-700 mb-1">Location Name (Hindi)</label>
+                                <input {...register('nameHi')} className="w-full border rounded-lg p-2" placeholder="हिंदी में नाम" />
+                            </div>
+                            <div>
+                                <label className="block text-sm font-bold text-gray-700 mb-1">Location Name (Malayalam)</label>
+                                <input {...register('nameMl')} className="w-full border rounded-lg p-2" placeholder="മലയാളത്തിൽ പേര്" />
+                            </div>
+                            <div>
+                                <label className="block text-sm font-bold text-gray-700 mb-1">Address (English)</label>
                                 <textarea {...register('address', { required: true })} rows={2} className="w-full border rounded-lg p-2" placeholder="Full address..." />
                             </div>
                             <div>
-                                <label className="block text-sm font-bold text-gray-700 mb-1">Details (Service Times, etc.)</label>
+                                <label className="block text-sm font-bold text-gray-700 mb-1">Address (Hindi)</label>
+                                <textarea {...register('addressHi')} rows={2} className="w-full border rounded-lg p-2" placeholder="हिंदी में पता" />
+                            </div>
+                            <div>
+                                <label className="block text-sm font-bold text-gray-700 mb-1">Address (Malayalam)</label>
+                                <textarea {...register('addressMl')} rows={2} className="w-full border rounded-lg p-2" placeholder="മലയാളത്തിൽ വിലാസം" />
+                            </div>
+                            <div>
+                                <label className="block text-sm font-bold text-gray-700 mb-1">Details (English) – Service Times, etc.</label>
                                 <textarea {...register('details')} rows={4} className="w-full border rounded-lg p-2" placeholder="Sunday Service: 9:00 AM..." />
+                            </div>
+                            <div>
+                                <label className="block text-sm font-bold text-gray-700 mb-1">Details (Hindi)</label>
+                                <textarea {...register('detailsHi')} rows={4} className="w-full border rounded-lg p-2" placeholder="हिंदी में विवरण" />
+                            </div>
+                            <div>
+                                <label className="block text-sm font-bold text-gray-700 mb-1">Details (Malayalam)</label>
+                                <textarea {...register('detailsMl')} rows={4} className="w-full border rounded-lg p-2" placeholder="മലയാളത്തിൽ വിവരണം" />
                             </div>
                             <div className="flex gap-2 pt-2">
                                 <button type="submit" className="flex-1 bg-primary text-white font-bold py-2 rounded-lg hover:bg-primary-dark transition-colors">

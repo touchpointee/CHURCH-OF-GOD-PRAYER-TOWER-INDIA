@@ -1,19 +1,26 @@
 import { NextResponse } from 'next/server';
 import dbConnect from '@/lib/db';
 import About from '@/models/About';
+import { getLangFromRequest } from '@/lib/resolveLang';
+import { resolveField } from '@/lib/resolveLang';
 
-export async function GET() {
+export async function GET(request: Request) {
     try {
         await dbConnect();
-        // Return the most recently updated about info, or create a default one if none exists
+        const lang = getLangFromRequest(request);
         let about = await About.findOne().sort({ updatedAt: -1 });
 
         if (!about) {
-            // Return empty structure or default
             return NextResponse.json({ success: true, data: {} });
         }
 
-        return NextResponse.json({ success: true, data: about });
+        const raw = about.toObject ? about.toObject() : { ...about };
+        const data = {
+            ...raw,
+            title: resolveField(raw, 'title', lang) ?? raw.title,
+            content: resolveField(raw, 'content', lang) ?? raw.content,
+        };
+        return NextResponse.json({ success: true, data });
     } catch (error: any) {
         return NextResponse.json({ success: false, error: error.message }, { status: 500 });
     }

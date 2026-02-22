@@ -11,6 +11,9 @@ export default function GalleryManager() {
     const [loading, setLoading] = useState(true);
     const [uploading, setUploading] = useState(false);
     const [uploadProgress, setUploadProgress] = useState({ current: 0, total: 0 });
+    const [renamingImage, setRenamingImage] = useState<{ _id: string; title: string; titleHi?: string; titleMl?: string } | null>(null);
+    const [renameForm, setRenameForm] = useState({ title: '', titleHi: '', titleMl: '' });
+    const [savingRename, setSavingRename] = useState(false);
     const router = useRouter();
 
     useEffect(() => {
@@ -81,16 +84,32 @@ export default function GalleryManager() {
         multiple: true // Enable multiple file selection
     });
 
-    const handleRename = async (id: string, currentTitle: string) => {
-        const newTitle = prompt('Enter new image name:', currentTitle);
-        if (!newTitle || newTitle === currentTitle) return;
+    const openRename = (img: any) => {
+        setRenamingImage({ _id: img._id, title: img.title ?? '', titleHi: img.titleHi ?? '', titleMl: img.titleMl ?? '' });
+        setRenameForm({ title: img.title ?? '', titleHi: img.titleHi ?? '', titleMl: img.titleMl ?? '' });
+    };
 
+    const handleRenameSubmit = async (e: React.FormEvent) => {
+        e.preventDefault();
+        if (!renamingImage) return;
+        setSavingRename(true);
         try {
-            await axios.put(`/api/gallery/${id}`, { title: newTitle });
-            setImages(images.map((img: any) => img._id === id ? { ...img, title: newTitle } : img) as any);
+            await axios.put(`/api/gallery/${renamingImage._id}`, {
+                title: renameForm.title,
+                titleHi: renameForm.titleHi || undefined,
+                titleMl: renameForm.titleMl || undefined,
+            });
+            setImages(images.map((img: any) =>
+                img._id === renamingImage._id
+                    ? { ...img, title: renameForm.title, titleHi: renameForm.titleHi || undefined, titleMl: renameForm.titleMl || undefined }
+                    : img
+            ) as any);
+            setRenamingImage(null);
         } catch (error) {
             console.error('Failed to rename image', error);
             alert('Failed to rename image');
+        } finally {
+            setSavingRename(false);
         }
     };
 
@@ -109,6 +128,36 @@ export default function GalleryManager() {
     if (loading) return <div>Loading...</div>;
 
     return (
+        <div>
+            {/* Rename modal – Title (EN/HI/ML) */}
+            {renamingImage && (
+                <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4" onClick={() => setRenamingImage(null)}>
+                    <div className="bg-white rounded-2xl shadow-xl max-w-md w-full p-6 space-y-4" onClick={e => e.stopPropagation()}>
+                        <h3 className="text-lg font-bold text-gray-900">Edit image title</h3>
+                        <form onSubmit={handleRenameSubmit} className="space-y-4">
+                            <div>
+                                <label className="block text-sm font-bold text-gray-700 mb-1">Title (English)</label>
+                                <input value={renameForm.title} onChange={e => setRenameForm(f => ({ ...f, title: e.target.value }))} className="w-full px-4 py-2 rounded-lg border border-gray-300 focus:border-accent outline-none" placeholder="Image title" required />
+                            </div>
+                            <div>
+                                <label className="block text-sm font-bold text-gray-700 mb-1">Title (Hindi)</label>
+                                <input value={renameForm.titleHi} onChange={e => setRenameForm(f => ({ ...f, titleHi: e.target.value }))} className="w-full px-4 py-2 rounded-lg border border-gray-300 focus:border-accent outline-none" placeholder="हिंदी में शीर्षक" />
+                            </div>
+                            <div>
+                                <label className="block text-sm font-bold text-gray-700 mb-1">Title (Malayalam)</label>
+                                <input value={renameForm.titleMl} onChange={e => setRenameForm(f => ({ ...f, titleMl: e.target.value }))} className="w-full px-4 py-2 rounded-lg border border-gray-300 focus:border-accent outline-none" placeholder="മലയാളത്തിൽ ശീർഷകം" />
+                            </div>
+                            <div className="flex gap-2 pt-2">
+                                <button type="submit" disabled={savingRename} className="flex-1 bg-primary text-white font-bold py-2 rounded-lg hover:bg-blue-700 disabled:opacity-50">
+                                    {savingRename ? <Loader2 className="animate-spin inline" size={18} /> : 'Save'}
+                                </button>
+                                <button type="button" onClick={() => setRenamingImage(null)} className="px-4 py-2 border border-gray-300 rounded-lg hover:bg-gray-50">Cancel</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            )}
+
         <div>
             <div className="mb-8">
                 <h1 className="text-3xl font-display font-bold text-gray-900">Gallery</h1>
@@ -151,7 +200,7 @@ export default function GalleryManager() {
                         <div className="absolute inset-0 bg-black/0 group-hover:bg-black/40 transition-colors flex items-end justify-between p-3 opacity-0 group-hover:opacity-100">
                             <span className="text-white text-xs font-bold truncate pr-2 flex-1">{img.title}</span>
                             <div className="flex gap-2">
-                                <button onClick={() => handleRename(img._id, img.title)} className="bg-white p-1.5 rounded-full text-blue-500 hover:bg-blue-50 transition-colors shadow-sm" title="Rename">
+                                <button onClick={() => openRename(img)} className="bg-white p-1.5 rounded-full text-blue-500 hover:bg-blue-50 transition-colors shadow-sm" title="Rename">
                                     <Pencil size={14} />
                                 </button>
                                 <button onClick={() => handleDelete(img._id)} className="bg-white p-1.5 rounded-full text-red-500 hover:bg-red-50 transition-colors shadow-sm" title="Delete">
@@ -165,6 +214,7 @@ export default function GalleryManager() {
                     <p className="col-span-full text-gray-400 text-center py-8">No images uploaded yet.</p>
                 )}
             </div>
+        </div>
         </div>
     );
 }

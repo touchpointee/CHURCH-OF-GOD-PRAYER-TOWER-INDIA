@@ -94,12 +94,20 @@ export default function NewEventPage() {
                         </div>
                     </div>
 
+                    <div>
+                        <label className="block text-sm font-bold text-gray-700 mb-1">Title (English)</label>
+                        <input {...register('title', { required: true })} className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:border-accent outline-none" placeholder="Event Title" />
+                        {errors.title && <span className="text-red-500 text-xs">Required</span>}
+                    </div>
+                    <div>
+                        <label className="block text-sm font-bold text-gray-700 mb-1">Title (Hindi)</label>
+                        <input {...register('titleHi')} className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:border-accent outline-none" placeholder="हिंदी में शीर्षक" />
+                    </div>
+                    <div>
+                        <label className="block text-sm font-bold text-gray-700 mb-1">Title (Malayalam)</label>
+                        <input {...register('titleMl')} className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:border-accent outline-none" placeholder="മലയാളത്തിൽ ശീർഷകം" />
+                    </div>
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                        <div>
-                            <label className="block text-sm font-bold text-gray-700 mb-1">Title</label>
-                            <input {...register('title', { required: true })} className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:border-accent outline-none" placeholder="Event Title" />
-                            {errors.title && <span className="text-red-500 text-xs">Required</span>}
-                        </div>
                         <div>
                             <label className="block text-sm font-bold text-gray-700 mb-1">Category</label>
                             <select {...register('category', { required: true })} className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:border-accent outline-none bg-white">
@@ -127,15 +135,31 @@ export default function NewEventPage() {
                     </div>
 
                     <div>
-                        <label className="block text-sm font-bold text-gray-700 mb-1">Location</label>
+                        <label className="block text-sm font-bold text-gray-700 mb-1">Location (English)</label>
                         <input {...register('location', { required: true })} className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:border-accent outline-none" placeholder="e.g. Main Sanctuary" />
                         {errors.location && <span className="text-red-500 text-xs">Required</span>}
                     </div>
+                    <div>
+                        <label className="block text-sm font-bold text-gray-700 mb-1">Location (Hindi)</label>
+                        <input {...register('locationHi')} className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:border-accent outline-none" placeholder="हिंदी में स्थान" />
+                    </div>
+                    <div>
+                        <label className="block text-sm font-bold text-gray-700 mb-1">Location (Malayalam)</label>
+                        <input {...register('locationMl')} className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:border-accent outline-none" placeholder="മലയാളത്തിൽ സ്ഥലം" />
+                    </div>
 
                     <div>
-                        <label className="block text-sm font-bold text-gray-700 mb-1">Description</label>
+                        <label className="block text-sm font-bold text-gray-700 mb-1">Description (English)</label>
                         <textarea {...register('description', { required: true })} rows={4} className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:border-accent outline-none" placeholder="Event details..." />
                         {errors.description && <span className="text-red-500 text-xs">Required</span>}
+                    </div>
+                    <div>
+                        <label className="block text-sm font-bold text-gray-700 mb-1">Description (Hindi)</label>
+                        <textarea {...register('descriptionHi')} rows={4} className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:border-accent outline-none" placeholder="हिंदी में विवरण" />
+                    </div>
+                    <div>
+                        <label className="block text-sm font-bold text-gray-700 mb-1">Description (Malayalam)</label>
+                        <textarea {...register('descriptionMl')} rows={4} className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:border-accent outline-none" placeholder="മലയാളത്തിൽ വിവരണം" />
                     </div>
 
                     <button

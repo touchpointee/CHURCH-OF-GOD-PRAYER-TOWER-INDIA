@@ -3,15 +3,17 @@
 import { Clock, MapPin, ChevronRight } from "lucide-react";
 import Link from "next/link";
 import { useState, useEffect } from "react";
+import { useLanguage } from "@/contexts/LanguageContext";
 
 export default function EventsPage() {
+    const { t, lang } = useLanguage();
     const [events, setEvents] = useState([]);
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
         const loadEvents = async () => {
             try {
-                const res = await fetch('/api/events');
+                const res = await fetch(`/api/events?lang=${lang}`);
                 const data = await res.json();
                 if (data.success) {
                     setEvents(data.data);
@@ -23,7 +25,7 @@ export default function EventsPage() {
             }
         };
         loadEvents();
-    }, []);
+    }, [lang]);
 
     const getMonthDay = (dateString: string) => {
         const date = new Date(dateString);
@@ -34,7 +36,7 @@ export default function EventsPage() {
         };
     };
 
-    if (loading) return <div className="min-h-screen flex items-center justify-center">Loading...</div>;
+    if (loading) return <div className="min-h-screen flex items-center justify-center">{t("events.loading")}</div>;
 
 
     return (
@@ -89,8 +91,8 @@ export default function EventsPage() {
                             <div className="w-20 h-20 bg-gray-50 rounded-full flex items-center justify-center mx-auto mb-6">
                                 <MapPin size={40} className="text-gray-300" />
                             </div>
-                            <h3 className="text-2xl font-bold text-gray-900 mb-2">No Upcoming Events</h3>
-                            <p className="text-gray-500 max-w-sm mx-auto">We're currently planning new events. Please check back later or visit our social media for updates.</p>
+                            <h3 className="text-2xl font-bold text-gray-900 mb-2">{t("events.noUpcomingEvents")}</h3>
+                            <p className="text-gray-500 max-w-sm mx-auto">{t("events.planningNew")}</p>
                         </div>
                     )}
                 </div>

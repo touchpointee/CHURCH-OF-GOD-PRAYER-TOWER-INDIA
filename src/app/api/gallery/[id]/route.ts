@@ -8,9 +8,13 @@ export async function PUT(request: Request, context: { params: Promise<{ id: str
         const { id } = await context.params;
         const body = await request.json();
 
+        const update: Record<string, unknown> = {};
+        if (body.title != null) update.title = body.title;
+        if (body.titleHi != null) update.titleHi = body.titleHi;
+        if (body.titleMl != null) update.titleMl = body.titleMl;
         const updatedImage = await GalleryImage.findByIdAndUpdate(
             id,
-            { title: body.title },
+            Object.keys(update).length ? update : { title: body.title },
             { new: true }
         );
 

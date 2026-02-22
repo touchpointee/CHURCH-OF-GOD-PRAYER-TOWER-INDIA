@@ -9,10 +9,14 @@ const HistorySchema = new mongoose.Schema({
         type: String,
         required: [true, 'Title is required'],
     },
+    titleHi: { type: String },
+    titleMl: { type: String },
     description: {
         type: String,
         required: [true, 'Description is required'],
     },
+    descriptionHi: { type: String },
+    descriptionMl: { type: String },
     image: {
         type: String,
         required: [true, 'Image URL is required'],

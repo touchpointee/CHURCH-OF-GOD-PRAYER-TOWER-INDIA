@@ -1,8 +1,10 @@
 "use client";
 
 import { motion } from "framer-motion";
+import { useLanguage } from "@/contexts/LanguageContext";
 
 export default function AboutSection() {
+    const { t } = useLanguage();
     return (
         <section className="relative w-full py-32 bg-stone-50 overflow-hidden">
             <div className="container mx-auto px-6 md:px-12">
@@ -15,21 +17,18 @@ export default function AboutSection() {
                         transition={{ duration: 1, ease: "easeOut" }}
                         className="lg:w-1/2 z-10 lg:pr-20 mb-16 lg:mb-0"
                     >
-                        <span className="text-amber-600 font-bold tracking-[0.2em] uppercase text-xs mb-6 block font-sans">Our Mission</span>
+                        <span className="text-amber-600 font-bold tracking-[0.2em] uppercase text-xs mb-6 block font-sans">{t("aboutSection.ourMission")}</span>
                         <h2 className="text-5xl md:text-6xl lg:text-7xl font-bold font-serif mb-8 text-stone-900 leading-none">
-                            LOVING <br />
-                            <span className="text-stone-400">GOD,</span> <br />
-                            LOVING <br />
-                            <span className="text-stone-400">PEOPLE.</span>
+                            {t("aboutSection.lovingGodLovingPeople")}
                         </h2>
                         <div className="w-20 h-1 bg-amber-500 mb-10" />
 
                         <p className="text-xl text-stone-600 mb-8 leading-relaxed font-light font-sans max-w-md">
-                            We are a family of believers united by grace, driven by love, and committed to making a difference.
+                            {t("aboutSection.paragraph")}
                         </p>
 
-                        <a href="/about" className="group inline-flex items-center text-stone-900 font-bold uppercase tracking-widest text-sm hover:text-amber-600 transition-colors">
-                            Read Our Story
+                        <a href="/about-us" className="group inline-flex items-center text-stone-900 font-bold uppercase tracking-widest text-sm hover:text-amber-600 transition-colors">
+                            {t("aboutSection.readOurStory")}
                             <span className="ml-2 w-8 h-[1px] bg-stone-900 group-hover:bg-amber-600 transition-colors" />
                         </a>
                     </motion.div>
@@ -58,14 +57,14 @@ export default function AboutSection() {
                 {/* Statistics - Brutalist Footer */}
                 <div className="grid grid-cols-2 md:grid-cols-4 gap-12 mt-32 pt-16 border-t border-stone-200">
                     {[
-                        { label: "Founded", value: "1994" },
-                        { label: "Members", value: "5K+" },
-                        { label: "Ministries", value: "50+" },
-                        { label: "Nations", value: "12" }
+                        { labelKey: "aboutSection.founded", value: "1994" },
+                        { labelKey: "aboutSection.members", value: "5K+" },
+                        { labelKey: "aboutSection.ministries", value: "50+" },
+                        { labelKey: "aboutSection.nations", value: "12" }
                     ].map((stat) => (
-                        <div key={stat.label} className="flex flex-col">
+                        <div key={stat.labelKey} className="flex flex-col">
                             <span className="text-5xl font-serif font-bold text-stone-300 mb-2">{stat.value}</span>
-                            <span className="text-xs font-bold uppercase tracking-widest text-stone-900">{stat.label}</span>
+                            <span className="text-xs font-bold uppercase tracking-widest text-stone-900">{t(stat.labelKey)}</span>
                         </div>
                     ))}
                 </div>

@@ -5,6 +5,8 @@ const GalleryImageSchema = new mongoose.Schema({
         type: String,
         required: [true, 'Please provide a title/caption.'],
     },
+    titleHi: { type: String },
+    titleMl: { type: String },
     imageUrl: {
         type: String,
         required: [true, 'Please provide the MinIO image URL.'],

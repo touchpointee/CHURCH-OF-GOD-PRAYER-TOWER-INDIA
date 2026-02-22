@@ -4,8 +4,10 @@ import { usePathname } from "next/navigation";
 import { useState } from "react";
 import AdminSidebar from "@/components/AdminSidebar";
 import { Menu } from "lucide-react";
+import { useLanguage } from "@/contexts/LanguageContext";
 
 export default function AdminLayoutClient({ children }: { children: React.ReactNode }) {
+    const { t } = useLanguage();
     const pathname = usePathname();
     const [sidebarOpen, setSidebarOpen] = useState(false);
 
@@ -32,7 +34,7 @@ export default function AdminLayoutClient({ children }: { children: React.ReactN
                     >
                         <Menu size={24} />
                     </button>
-                    <span className="font-display font-bold text-lg text-gray-900">Admin Portal</span>
+                    <span className="font-display font-bold text-lg text-gray-900">{t("admin.portal")}</span>
                 </header>
 
                 <div className="p-4 md:p-8 max-w-7xl mx-auto">

@@ -6,8 +6,10 @@ import {
 } from "lucide-react";
 import Link from "next/link";
 import { useState, useEffect } from "react";
+import { useLanguage } from "@/contexts/LanguageContext";
 
 export default function Footer() {
+    const { t } = useLanguage();
     const [socialUrls, setSocialUrls] = useState({ facebookUrl: '', youtubeUrl: '', instagramUrl: '' });
 
     useEffect(() => {
@@ -46,12 +48,13 @@ export default function Footer() {
                                 />
                             </div>
                             <div>
-                                <h4 className="font-display font-bold text-white text-xl leading-none">CHURCH OF GOD</h4>
-                                <span className="text-[10px] text-accent uppercase tracking-[0.2em] font-medium block mt-1">Prayer Tower India</span>
+                                <h4 className="font-display font-bold text-white text-lg md:text-xl leading-tight uppercase tracking-tight">
+                                    CHURCH OF GOD<br />PRAYER TOWER INDIA
+                                </h4>
                             </div>
                         </div>
                         <p className="text-gray-400 text-sm leading-relaxed font-sans max-w-xs">
-                            A place where prayers are lifted up for your needs. We are dedicated to serving the community and spreading the message of love and hope.
+                            {t("footer.tagline")}
                         </p>
                         <div className="flex space-x-3 pt-2">
                             {socialLinks.map((item, i) => (
@@ -65,22 +68,22 @@ export default function Footer() {
                     {/* Explore */}
                     <div>
                         <h5 className="text-white font-display font-bold text-lg mb-8 relative inline-block">
-                            Explore
+                            {t("footer.explore")}
                             <span className="absolute -bottom-2 left-0 w-12 h-1 bg-accent rounded-full"></span>
                         </h5>
                         <ul className="space-y-4 text-sm text-gray-400 font-sans">
                             {[
-                                { name: 'Home', path: '/' },
-                                { name: 'About Us', path: '/about-us' },
-                                { name: 'Our History', path: '/history' },
-                                { name: 'Statement of Faith', path: '/statement-of-faith' },
-                                { name: 'Events', path: '/events' },
-                                { name: 'Contact Us', path: '/contact' },
+                                { nameKey: 'footer.home', path: '/' },
+                                { nameKey: 'footer.aboutUs', path: '/about-us' },
+                                { nameKey: 'footer.ourHistory', path: '/history' },
+                                { nameKey: 'footer.statementOfFaith', path: '/statement-of-faith' },
+                                { nameKey: 'footer.events', path: '/events' },
+                                { nameKey: 'footer.contactUs', path: '/contact' },
                             ].map((item) => (
-                                <li key={item.name}>
+                                <li key={item.nameKey}>
                                     <Link href={item.path} className="hover:text-accent flex items-center transition-all duration-300 group">
                                         <ChevronRight size={14} className="mr-2 text-accent/50 group-hover:text-accent transition-colors" />
-                                        {item.name}
+                                        {t(item.nameKey)}
                                     </Link>
                                 </li>
                             ))}
@@ -90,20 +93,20 @@ export default function Footer() {
                     {/* Connect */}
                     <div>
                         <h5 className="text-white font-display font-bold text-lg mb-8 relative inline-block">
-                            Connect
+                            {t("footer.connect")}
                             <span className="absolute -bottom-2 left-0 w-12 h-1 bg-accent rounded-full"></span>
                         </h5>
                         <ul className="space-y-4 text-sm text-gray-400 font-sans">
                             {[
-                                { name: 'Gallery', path: '/gallery' },
-                                { name: 'Videos', path: '/videos' },
-                                { name: 'Prayer Request', path: '/prayer-request' },
-                                { name: 'Donate', path: '/donate' },
+                                { nameKey: 'footer.gallery', path: '/gallery' },
+                                { nameKey: 'footer.videos', path: '/videos' },
+                                { nameKey: 'footer.prayerRequest', path: '/prayer-request' },
+                                { nameKey: 'footer.donate', path: '/donate' },
                             ].map((item) => (
-                                <li key={item.name}>
+                                <li key={item.nameKey}>
                                     <Link href={item.path} className="hover:text-accent flex items-center transition-all duration-300 group">
                                         <ChevronRight size={14} className="mr-2 text-accent/50 group-hover:text-accent transition-colors" />
-                                        {item.name}
+                                        {t(item.nameKey)}
                                     </Link>
                                 </li>
                             ))}
@@ -113,14 +116,14 @@ export default function Footer() {
                     {/* Stay Informed */}
                     <div>
                         <h5 className="text-white font-display font-bold text-lg mb-8 relative inline-block">
-                            Stay Informed
+                            {t("footer.stayInformed")}
                             <span className="absolute -bottom-2 left-0 w-12 h-1 bg-accent rounded-full"></span>
                         </h5>
-                        <p className="text-gray-400 text-sm mb-6 font-sans">Sign up for our newsletter and receive the latest updates.</p>
+                        <p className="text-gray-400 text-sm mb-6 font-sans">{t("footer.newsletterText")}</p>
                         <form className="flex mb-8 relative">
                             <input
                                 className="bg-white/5 border border-white/10 text-white placeholder-gray-500 rounded-lg w-full focus:ring-1 focus:ring-accent focus:border-accent text-sm py-3 px-4 outline-none transition-all"
-                                placeholder="Enter your email"
+                                placeholder={t("footer.enterYourEmail")}
                                 type="email"
                             />
                             <button className="absolute right-1 top-1 bottom-1 bg-accent text-white rounded-md px-3 hover:bg-accent-hover transition-colors shadow-lg shadow-accent/20">
@@ -146,11 +149,11 @@ export default function Footer() {
                 </div>
 
                 <div className="border-t border-white/10 pt-8 flex flex-col md:flex-row justify-between items-center text-xs text-gray-500 font-sans">
-                    <p>© 2026 Church of God Prayer Tower India. All Rights Reserved.</p>
+                    <p>{t("footer.copyrightPrefix")} Church of God Prayer Tower India. {t("footer.allRightsReserved")}</p>
                     <div className="flex space-x-6 mt-4 md:mt-0">
-                        <a href="#" className="hover:text-accent transition-colors">Terms & Conditions</a>
-                        <a href="#" className="hover:text-accent transition-colors">Privacy Policy</a>
-                        <a href="#" className="hover:text-accent transition-colors">Sitemap</a>
+                        <a href="#" className="hover:text-accent transition-colors">{t("footer.termsAndConditions")}</a>
+                        <a href="#" className="hover:text-accent transition-colors">{t("footer.privacyPolicy")}</a>
+                        <a href="#" className="hover:text-accent transition-colors">{t("footer.sitemap")}</a>
                     </div>
                 </div>
             </div>

@@ -3,6 +3,7 @@
 import { motion } from "framer-motion";
 import { Play, ArrowRight } from "lucide-react";
 import Link from "next/link";
+import { useLanguage } from "@/contexts/LanguageContext";
 
 const videos = [
     { title: "Sunday Service", thumbnail: "https://images.unsplash.com/photo-1510915228340-29c85a43dcfe?q=80&w=2670&auto=format&fit=crop" },
@@ -12,15 +13,16 @@ const videos = [
 ];
 
 export default function MediaHighlights() {
+    const { t } = useLanguage();
     return (
         <section className="bg-black py-20 overflow-hidden">
             <div className="container mx-auto px-6 mb-12 flex justify-between items-end">
                 <div>
-                    <span className="text-red-500 font-bold tracking-widest uppercase text-sm mb-2 block">Watch Online</span>
-                    <h2 className="text-4xl text-white font-serif font-bold">Latest Sermons</h2>
+                    <span className="text-red-500 font-bold tracking-widest uppercase text-sm mb-2 block">{t("mediaHighlights.watchOnline")}</span>
+                    <h2 className="text-4xl text-white font-serif font-bold">{t("mediaHighlights.latestSermons")}</h2>
                 </div>
                 <Link href="/videos" className="hidden md:flex items-center text-white/70 hover:text-white transition-colors">
-                    View All Videos <ArrowRight className="ml-2 w-4 h-4" />
+                    {t("mediaHighlights.viewAllVideos")} <ArrowRight className="ml-2 w-4 h-4" />
                 </Link>
             </div>
 

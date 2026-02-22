@@ -2,15 +2,17 @@
 
 import { useState, useEffect } from "react";
 import axios from "axios";
+import { useLanguage } from "@/contexts/LanguageContext";
 
 export default function AboutPage() {
+    const { t, lang } = useLanguage();
     const [data, setData] = useState<any>(null);
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const res = await axios.get('/api/about');
+                const res = await axios.get(`/api/about?lang=${lang}`);
                 if (res.data.success) {
                     setData(res.data.data);
                 }
@@ -21,12 +23,12 @@ export default function AboutPage() {
             }
         };
         fetchData();
-    }, []);
+    }, [lang]);
 
     // Default values if no data yet
     const founderName = data?.founderName || "Pastor P M Joseph";
     const founderImage = data?.founderImage || "https://lh3.googleusercontent.com/aida-public/AB6AXuAnSH6F9FDGDKuyw4T63E-9y_0uJcX2dFseLUuqN9lF3CZHe09bXg37HSTZtaoPmw1R0UPT35f7WbzQV5E_fBtOwwAvynAxki85vu2C1wfw12jdeeAvCCe33aGKlgSaOasXFn-lSvmeHgdmMTzfMGUuzk8u7eQcDFHOoOc_lGJrTvhD6uEKY-WUV-5Aq98TxxxHvCGBtGOEUKFykBbkNNPzoI2Gnh5Tg2R4sR-xvDgqxD5f50jDC-NLZMdHsgFZOkwXkela-zrg1O4"; // Fallback image provided in previous version
-    const title = data?.title || "Who we are?";
+    const title = data?.title ?? t("about.defaultTitle");
     const content = data?.content || "The India Pentecostal Church of God (IPC) is the largest indigenous Pentecostal denomination in India. The Christian movement in India was pioneered by the disciple of Lord Jesus Christ, Thomas the Apostle, who traveled outside the Roman Empire to preach the Gospel, traveling as far as India. According to tradition, the Apostle reached Muziris, India in 52 AD and baptized several people. The origins of the Indian Pentecostal Church of God can be traced back to the Pentecostal movement in India to the early 20th century and the church has been growing ever since.\n\nThe chief architect and the founder of IPC was Pastor K.E.Abraham, a powerful orator and writer. Pastor K.E. Abraham received the baptism of the Holy Spirit in 1923. Apostle P. M. Samuel, Pastor T. G. Oommen, Pastor K.C.Cherian, Pastor P.T.Chacko, Pastor K.C.Oommen, Pastor P.T. Mathew and many others were also filled with the Holy Spirit in Nineteen Twenties.";
     return (
         <div className="min-h-screen bg-white font-sans pt-12 pb-20">
@@ -51,7 +53,7 @@ export default function AboutPage() {
                         <div className="bg-[#0f172a] text-white rounded-lg overflow-hidden shadow-xl max-w-sm mx-auto lg:mx-0">
                             {/* Card Header */}
                             <div className="bg-[#0f172a] py-4 text-center border-b border-gray-700">
-                                <h3 className="text-xl font-bold text-white">Our Founder</h3>
+                                <h3 className="text-xl font-bold text-white">{t("about.ourFounder")}</h3>
                             </div>
 
                             {/* Image */}

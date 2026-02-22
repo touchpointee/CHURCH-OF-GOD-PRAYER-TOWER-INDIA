@@ -1,26 +1,49 @@
 "use client";
 
-import { useState } from 'react';
+import { useState, useEffect, use } from 'react';
 import { useRouter } from 'next/navigation';
 import { useForm } from 'react-hook-form';
 import axios from 'axios';
 import { ArrowLeft, Loader2 } from 'lucide-react';
 import Link from 'next/link';
 
-export default function NewVideoPage() {
+export default function EditVideoPage({ params }: { params: Promise<{ id: string }> }) {
+    const { id } = use(params);
     const router = useRouter();
-    const { register, handleSubmit, formState: { errors }, watch, setValue } = useForm();
+    const { register, handleSubmit, formState: { errors }, watch, setValue, reset } = useForm();
+    const [loading, setLoading] = useState(true);
     const [submitting, setSubmitting] = useState(false);
-
-    // Helper to extract YouTube ID and generate thumbnail
-    const youtubeUrl = watch('youtubeUrl');
     const [previewThumbnail, setPreviewThumbnail] = useState('');
+
+    useEffect(() => {
+        const fetchVideo = async () => {
+            try {
+                const res = await axios.get(`/api/videos/${id}`);
+                if (res.data.success) {
+                    const video = res.data.data;
+                    reset({
+                        title: video.title,
+                        titleHi: video.titleHi || '',
+                        titleMl: video.titleMl || '',
+                        youtubeUrl: video.youtubeUrl,
+                        thumbnailUrl: video.thumbnailUrl
+                    });
+                    setPreviewThumbnail(video.thumbnailUrl);
+                }
+            } catch (error) {
+                console.error("Failed to fetch video", error);
+                alert("Failed to load video data");
+            } finally {
+                setLoading(false);
+            }
+        };
+        fetchVideo();
+    }, [id, reset]);
 
     const handleUrlChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const url = e.target.value;
         let videoId = '';
 
-        // Robust regex for YouTube ID extraction
         const regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|&v=)([^#&?]*).*/;
         const match = url.match(regExp);
 
@@ -31,7 +54,7 @@ export default function NewVideoPage() {
         if (videoId) {
             const thumb = `https://img.youtube.com/vi/${videoId}/maxresdefault.jpg`;
             setPreviewThumbnail(thumb);
-            setValue('thumbnailUrl', thumb); // Set hidden value
+            setValue('thumbnailUrl', thumb);
         } else {
             setPreviewThumbnail('');
             setValue('thumbnailUrl', '');
@@ -41,16 +64,24 @@ export default function NewVideoPage() {
     const onSubmit = async (data: any) => {
         setSubmitting(true);
         try {
-            await axios.post('/api/videos', data);
+            await axios.patch(`/api/videos/${id}`, data);
             router.push('/admin/videos');
             router.refresh();
         } catch (error) {
-            console.error("Create failed", error);
-            alert("Failed to create video");
+            console.error("Update failed", error);
+            alert("Failed to update video");
         } finally {
             setSubmitting(false);
         }
     };
+
+    if (loading) {
+        return (
+            <div className="flex items-center justify-center min-h-[400px]">
+                <Loader2 className="animate-spin text-primary" size={40} />
+            </div>
+        );
+    }
 
     return (
         <div className="max-w-2xl mx-auto">
@@ -59,7 +90,7 @@ export default function NewVideoPage() {
             </Link>
 
             <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-8">
-                <h1 className="text-2xl font-display font-bold text-gray-900 mb-6">Add New Video</h1>
+                <h1 className="text-2xl font-display font-bold text-gray-900 mb-6">Edit Video</h1>
 
                 <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
 
@@ -77,10 +108,8 @@ export default function NewVideoPage() {
                         {errors.youtubeUrl && <span className="text-red-500 text-xs">Required</span>}
                     </div>
 
-                    {/* Hidden thumbnail field */}
                     <input type="hidden" {...register('thumbnailUrl')} />
 
-                    {/* Preview */}
                     {previewThumbnail && (
                         <div className="bg-gray-100 p-4 rounded-xl">
                             <p className="text-xs font-bold text-gray-500 mb-2 uppercase">Thumbnail Preview</p>
@@ -102,14 +131,12 @@ export default function NewVideoPage() {
                         <input {...register('titleMl')} className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:border-accent outline-none" placeholder="മലയാളത്തിൽ ശീർഷകം" />
                     </div>
 
-
-
                     <button
                         type="submit"
                         disabled={submitting}
                         className="w-full bg-primary text-white font-bold py-4 rounded-xl hover:bg-blue-700 transition-colors shadow-lg shadow-primary/20 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
                     >
-                        {submitting ? <Loader2 className="animate-spin" /> : 'Add Video'}
+                        {submitting ? <Loader2 className="animate-spin" /> : 'Update Video'}
                     </button>
                 </form>
             </div>

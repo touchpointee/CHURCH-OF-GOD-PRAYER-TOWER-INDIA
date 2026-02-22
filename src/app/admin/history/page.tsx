@@ -79,7 +79,11 @@ export default function ManageHistoryPage() {
         setEditingId(milestone._id);
         setValue('year', milestone.year);
         setValue('title', milestone.title);
+        setValue('titleHi', milestone.titleHi ?? '');
+        setValue('titleMl', milestone.titleMl ?? '');
         setValue('description', milestone.description);
+        setValue('descriptionHi', milestone.descriptionHi ?? '');
+        setValue('descriptionMl', milestone.descriptionMl ?? '');
         setValue('image', milestone.image);
         window.scrollTo({ top: 0, behavior: 'smooth' });
     };
@@ -231,7 +235,7 @@ export default function ManageHistoryPage() {
                             </div>
 
                             <div>
-                                <label className="block text-sm font-bold text-gray-700 mb-1">Title</label>
+                                <label className="block text-sm font-bold text-gray-700 mb-1">Title (English)</label>
                                 <input
                                     {...register('title', { required: true })}
                                     className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:border-accent outline-none"
@@ -239,15 +243,31 @@ export default function ManageHistoryPage() {
                                 />
                                 {errors.title && <span className="text-red-500 text-xs">Required</span>}
                             </div>
+                            <div>
+                                <label className="block text-sm font-bold text-gray-700 mb-1">Title (Hindi)</label>
+                                <input {...register('titleHi')} className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:border-accent outline-none" placeholder="हिंदी में शीर्षक" />
+                            </div>
+                            <div>
+                                <label className="block text-sm font-bold text-gray-700 mb-1">Title (Malayalam)</label>
+                                <input {...register('titleMl')} className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:border-accent outline-none" placeholder="മലയാളത്തിൽ ശീർഷകം" />
+                            </div>
 
                             <div>
-                                <label className="block text-sm font-bold text-gray-700 mb-1">Description</label>
+                                <label className="block text-sm font-bold text-gray-700 mb-1">Description (English)</label>
                                 <textarea
                                     {...register('description', { required: true })}
                                     className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:border-accent outline-none min-h-[100px]"
                                     placeholder="Brief description..."
                                 ></textarea>
                                 {errors.description && <span className="text-red-500 text-xs">Required</span>}
+                            </div>
+                            <div>
+                                <label className="block text-sm font-bold text-gray-700 mb-1">Description (Hindi)</label>
+                                <textarea {...register('descriptionHi')} className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:border-accent outline-none min-h-[80px]" placeholder="हिंदी में विवरण" />
+                            </div>
+                            <div>
+                                <label className="block text-sm font-bold text-gray-700 mb-1">Description (Malayalam)</label>
+                                <textarea {...register('descriptionMl')} className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:border-accent outline-none min-h-[80px]" placeholder="മലയാളത്തിൽ വിവരണം" />
                             </div>
 
                             <div>

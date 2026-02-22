@@ -7,6 +7,7 @@
 :root {
   --font-display: 'Playfair Display', serif;
   --font-sans: 'Montserrat', sans-serif;
+  --ease-out: cubic-bezier(0.33, 1, 0.68, 1);
 }
 
 .hero-pattern {
@@ -79,4 +80,67 @@ a {
 
 ::-webkit-scrollbar-thumb:hover {
   background: var(--primary);
+}
+
+/* Google Translate Widget Customizations */
+.goog-te-banner-frame,
+.goog-te-banner,
+.goog-te-balloon-frame,
+#goog-gt-tt,
+.goog-te-balloon-frame.skiptranslate,
+.goog-tooltip,
+.goog-tooltip:hover {
+  display: none !important;
+}
+
+.goog-text-highlight {
+  background-color: transparent !important;
+  border: none !important;
+  box-shadow: none !important;
+}
+
+body {
+  top: 0px !important;
+  position: static !important;
+}
+
+/* Hide the top bar but keep it in render tree for functionality */
+body>.skiptranslate {
+  display: none !important;
+}
+
+/* Hide the original Google Widget visually but keep it functional */
+.goog-te-gadget {
+  height: 1px !important;
+  width: 1px !important;
+  overflow: hidden !important;
+  padding: 0 !important;
+  margin: 0 !important;
+  opacity: 0 !important;
+  position: fixed !important;
+  top: 0 !important;
+  left: 0 !important;
+  z-index: -9999 !important;
+  pointer-events: none !important;
+}
+
+/* Hide "Powered by Google" and other branding if it appears in the widget */
+.goog-logo-link,
+.goog-logo-link:link,
+.goog-logo-link:visited,
+.goog-logo-link:hover,
+.goog-logo-link:active {
+  display: none !important;
+}
+
+.goog-te-gadget {
+  color: transparent !important;
+}
+
+.goog-te-gadget span {
+  display: none !important;
+}
+
+.goog-te-menu-frame {
+  display: none !important;
 }
