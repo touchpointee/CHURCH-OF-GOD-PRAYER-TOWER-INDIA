@@ -8,13 +8,19 @@ const EventSchema = new mongoose.Schema({
     },
     titleHi: { type: String },
     titleMl: { type: String },
+    dateType: {
+        type: String,
+        enum: ['single', 'range'],
+        default: 'single',
+    },
     date: {
         type: Date,
         required: [true, 'Please provide a date for this event.'],
     },
+    dateEnd: { type: Date },
     time: {
         type: String,
-        required: [true, 'Please provide a time for this event.'],
+        required: false,
     },
     location: {
         type: String,
@@ -22,10 +28,7 @@ const EventSchema = new mongoose.Schema({
     },
     locationHi: { type: String },
     locationMl: { type: String },
-    category: {
-        type: String,
-        required: [true, 'Please provide a category for this event.'],
-    },
+    category: { type: String },
     description: {
         type: String,
         required: [true, 'Please provide a description for this event.'],
@@ -38,4 +41,6 @@ const EventSchema = new mongoose.Schema({
     },
 }, { timestamps: true });
 
-export default mongoose.models.Event || mongoose.model('Event', EventSchema);
+// Avoid recompiling with stale schema (e.g. category was required before)
+if (mongoose.models.Event) delete mongoose.models.Event;
+export default mongoose.model('Event', EventSchema);

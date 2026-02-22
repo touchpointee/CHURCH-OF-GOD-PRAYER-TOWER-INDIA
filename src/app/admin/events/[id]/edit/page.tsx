@@ -12,7 +12,9 @@ export default function EditEventPage() {
     const router = useRouter();
     const params = useParams();
     const id = params?.id as string;
-    const { register, handleSubmit, reset, formState: { errors } } = useForm();
+    type EventForm = { dateType: 'single' | 'range'; title?: string; titleHi?: string; titleMl?: string; category?: string; date?: string; dateEnd?: string; time?: string; location?: string; locationHi?: string; locationMl?: string; description?: string; descriptionHi?: string; descriptionMl?: string };
+    const { register, handleSubmit, reset, formState: { errors }, watch } = useForm<EventForm>({ defaultValues: { dateType: 'single' } });
+    const dateType = watch('dateType');
     const [loading, setLoading] = useState(true);
     const [submitting, setSubmitting] = useState(false);
     const [uploading, setUploading] = useState(false);
@@ -27,12 +29,15 @@ export default function EditEventPage() {
                     const event = res.data.data;
                     setImageUrl(event.imageUrl || '');
                     const dateStr = event.date ? new Date(event.date).toISOString().slice(0, 10) : '';
+                    const dateEndStr = event.dateEnd ? new Date(event.dateEnd).toISOString().slice(0, 10) : '';
                     reset({
                         title: event.title ?? '',
                         titleHi: event.titleHi ?? '',
                         titleMl: event.titleMl ?? '',
                         category: event.category ?? '',
+                        dateType: event.dateType ?? 'single',
                         date: dateStr,
+                        dateEnd: dateEndStr,
                         time: event.time ?? '',
                         location: event.location ?? '',
                         locationHi: event.locationHi ?? '',
@@ -81,10 +86,19 @@ export default function EditEventPage() {
             alert("Please upload an image first.");
             return;
         }
-
+        const payload: any = { ...data, imageUrl };
+        if (data.dateType === 'range') {
+            payload.time = '';
+            if (!payload.dateEnd || payload.date > payload.dateEnd) {
+                alert("End date must be on or after start date.");
+                return;
+            }
+        } else {
+            payload.dateEnd = undefined;
+        }
         setSubmitting(true);
         try {
-            await axios.put(`/api/events/${id}`, { ...data, imageUrl });
+            await axios.put(`/api/events/${id}`, payload);
             router.push('/admin/events');
             router.refresh();
         } catch (error: any) {
@@ -148,29 +162,56 @@ export default function EditEventPage() {
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                         <div>
                             <label className="block text-sm font-bold text-gray-700 mb-1">Category</label>
-                            <select {...register('category', { required: true })} className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:border-accent outline-none bg-white">
-                                <option value="">Select Category</option>
+                            <select {...register('category')} className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:border-accent outline-none bg-white">
+                                <option value="">Select Category (Optional)</option>
                                 <option value="Special Service">Special Service</option>
                                 <option value="Youth">Youth</option>
                                 <option value="Study">Study</option>
                                 <option value="Outreach">Outreach</option>
                             </select>
-                            {errors.category && <span className="text-red-500 text-xs">Required</span>}
                         </div>
                     </div>
 
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                        <div>
-                            <label className="block text-sm font-bold text-gray-700 mb-1">Date</label>
-                            <input type="date" {...register('date', { required: true })} className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:border-accent outline-none" />
-                            {errors.date && <span className="text-red-500 text-xs">Required</span>}
-                        </div>
-                        <div>
-                            <label className="block text-sm font-bold text-gray-700 mb-1">Time</label>
-                            <input type="time" {...register('time', { required: true })} className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:border-accent outline-none" />
-                            {errors.time && <span className="text-red-500 text-xs">Required</span>}
+                    <div>
+                        <label className="block text-sm font-bold text-gray-700 mb-2">Event date type</label>
+                        <div className="flex gap-6">
+                            <label className="flex items-center gap-2 cursor-pointer">
+                                <input type="radio" value="single" {...register('dateType')} className="rounded border-gray-300 text-primary focus:ring-primary" />
+                                <span className="text-gray-700">Single date & time</span>
+                            </label>
+                            <label className="flex items-center gap-2 cursor-pointer">
+                                <input type="radio" value="range" {...register('dateType')} className="rounded border-gray-300 text-primary focus:ring-primary" />
+                                <span className="text-gray-700">Date range (e.g. 10–18 February)</span>
+                            </label>
                         </div>
                     </div>
+                    {dateType === 'single' ? (
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <div>
+                                <label className="block text-sm font-bold text-gray-700 mb-1">Date</label>
+                                <input type="date" {...register('date', { required: true })} className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:border-accent outline-none" />
+                                {errors.date && <span className="text-red-500 text-xs">Required</span>}
+                            </div>
+                            <div>
+                                <label className="block text-sm font-bold text-gray-700 mb-1">Time</label>
+                                <input type="time" {...register('time', { required: true })} className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:border-accent outline-none" />
+                                {errors.time && <span className="text-red-500 text-xs">Required</span>}
+                            </div>
+                        </div>
+                    ) : (
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <div>
+                                <label className="block text-sm font-bold text-gray-700 mb-1">Start date</label>
+                                <input type="date" {...register('date', { required: true })} className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:border-accent outline-none" />
+                                {errors.date && <span className="text-red-500 text-xs">Required</span>}
+                            </div>
+                            <div>
+                                <label className="block text-sm font-bold text-gray-700 mb-1">End date</label>
+                                <input type="date" {...register('dateEnd', { required: true })} className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:border-accent outline-none" />
+                                {errors.dateEnd && <span className="text-red-500 text-xs">Required</span>}
+                            </div>
+                        </div>
+                    )}
 
                     <div>
                         <label className="block text-sm font-bold text-gray-700 mb-1">Location (English)</label>

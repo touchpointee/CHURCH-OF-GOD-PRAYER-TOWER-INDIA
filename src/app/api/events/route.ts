@@ -3,6 +3,7 @@ import dbConnect from '@/lib/db';
 import Event from '@/models/Event';
 import { getLangFromRequest } from '@/lib/resolveLang';
 import { resolveField } from '@/lib/resolveLang';
+import { normalizeEventBody } from '@/lib/events';
 
 export async function GET(request: Request) {
     try {
@@ -26,7 +27,9 @@ export async function POST(request: Request) {
     try {
         await dbConnect();
         const body = await request.json();
-        const event = await Event.create(body);
+        if (body.category === '') body.category = undefined;
+        const normalized = normalizeEventBody(body);
+        const event = await Event.create(normalized);
         return NextResponse.json({ success: true, data: event }, { status: 201 });
     } catch (error: any) {
         return NextResponse.json({ success: false, error: error.message }, { status: 400 });

@@ -1,6 +1,6 @@
 "use client";
 
-import { Clock, MapPin, ChevronRight } from "lucide-react";
+import { Clock, MapPin, ChevronRight, Calendar } from "lucide-react";
 import Link from "next/link";
 import { useState, useEffect } from "react";
 import { useLanguage } from "@/contexts/LanguageContext";
@@ -36,6 +36,14 @@ export default function EventsPage() {
         };
     };
 
+    const formatDateRange = (start: string, end: string) => {
+        const s = new Date(start);
+        const e = new Date(end);
+        const month = s.toLocaleString('default', { month: 'short' }).toUpperCase();
+        const year = s.getFullYear();
+        return `${s.getDate()} – ${e.getDate()} ${month} ${year}`;
+    };
+
     if (loading) return <div className="min-h-screen flex items-center justify-center">{t("events.loading")}</div>;
 
 
@@ -47,6 +55,7 @@ export default function EventsPage() {
                 <div className="grid gap-6">
                     {events.length > 0 ? (
                         events.map((event: any) => {
+                            const isRange = event.dateType === 'range' && event.dateEnd;
                             const dateInfo = getMonthDay(event.date);
                             return (
                                 <Link href={`/events/${event._id}`} key={event._id} className="block">
@@ -55,7 +64,11 @@ export default function EventsPage() {
                                         <div className="md:w-32 bg-secondary/10 flex flex-col items-center justify-center p-4 border-r border-gray-100 flex-shrink-0 relative overflow-hidden">
                                             <div className="absolute inset-0 bg-secondary opacity-0 group-hover:opacity-10 transition-opacity"></div>
                                             <span className="text-black font-bold text-xl">{dateInfo.month}</span>
-                                            <span className="text-4xl font-bold text-gray-800">{dateInfo.day}</span>
+                                            {isRange ? (
+                                                <span className="text-2xl font-bold text-gray-800">{dateInfo.day} – {new Date(event.dateEnd).getDate()}</span>
+                                            ) : (
+                                                <span className="text-4xl font-bold text-gray-800">{dateInfo.day}</span>
+                                            )}
                                             <span className="text-gray-600 font-medium text-sm mt-1">{dateInfo.year}</span>
                                         </div>
 
@@ -67,11 +80,17 @@ export default function EventsPage() {
                                         {/* Details */}
                                         <div className="p-6 flex-grow flex flex-col justify-center">
                                             <div className="flex items-center gap-2 mb-2">
+                                                {event.category && (
                                                 <span className="bg-primary/10 text-primary text-xs font-bold px-2 py-1 rounded uppercase tracking-wider">{event.category}</span>
+                                            )}
                                             </div>
                                             <h3 className="text-2xl font-bold text-gray-900 mb-3 group-hover:text-primary transition-colors">{event.title}</h3>
                                             <div className="flex flex-wrap gap-4 text-sm text-gray-500">
-                                                <span className="flex items-center gap-1"><Clock size={16} /> {event.time}</span>
+                                                {isRange ? (
+                                                    <span className="flex items-center gap-1"><Calendar size={16} /> {formatDateRange(event.date, event.dateEnd)}</span>
+                                                ) : (
+                                                    <span className="flex items-center gap-1"><Clock size={16} /> {event.time}</span>
+                                                )}
                                                 <span className="flex items-center gap-1"><MapPin size={16} /> {event.location}</span>
                                             </div>
                                         </div>

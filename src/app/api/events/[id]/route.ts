@@ -3,6 +3,7 @@ import dbConnect from '@/lib/db';
 import Event from '@/models/Event';
 import { getLangFromRequest } from '@/lib/resolveLang';
 import { resolveField } from '@/lib/resolveLang';
+import { normalizeEventBody } from '@/lib/events';
 
 export async function GET(request: Request, props: { params: Promise<{ id: string }> }) {
     await dbConnect();
@@ -35,7 +36,9 @@ export async function PUT(request: Request, props: { params: Promise<{ id: strin
     try {
         const { id } = await props.params;
         const body = await request.json();
-        const event = await Event.findByIdAndUpdate(id, body, { new: true, runValidators: true });
+        if (body.category === '') body.category = null;
+        const normalized = normalizeEventBody(body);
+        const event = await Event.findByIdAndUpdate(id, normalized, { new: true, runValidators: true });
         if (!event) {
             return NextResponse.json({ success: false, error: 'Event not found' }, { status: 404 });
         }

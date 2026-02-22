@@ -14,19 +14,27 @@ export default function EventDetailClient({ id }: { id: string }) {
     const addToCalendar = (type: 'google' | 'outlook' | 'yahoo' | 'ics') => {
         if (!event) return;
 
-        const startDate = new Date(event.date);
+        const isRange = event.dateType === 'range' && event.dateEnd;
+        let startDate: Date;
+        let endDate: Date;
 
-        // Parse time if available
-        if (event.time) {
-            const [hours, minutes] = event.time.split(':');
-            if (hours && minutes) {
-                startDate.setHours(parseInt(hours));
-                startDate.setMinutes(parseInt(minutes));
+        if (isRange) {
+            startDate = new Date(event.date);
+            startDate.setHours(0, 0, 0, 0);
+            endDate = new Date(event.dateEnd);
+            endDate.setHours(23, 59, 59, 999);
+        } else {
+            startDate = new Date(event.date);
+            if (event.time) {
+                const [hours, minutes] = event.time.split(':');
+                if (hours && minutes) {
+                    startDate.setHours(parseInt(hours));
+                    startDate.setMinutes(parseInt(minutes));
+                }
             }
+            endDate = new Date(startDate);
+            endDate.setHours(startDate.getHours() + 2, startDate.getMinutes(), 0, 0);
         }
-
-        const endDate = new Date(startDate);
-        endDate.setHours(startDate.getHours() + 2); // Default 2 hours duration
 
         const formatDate = (date: Date) => date.toISOString().replace(/-|:|\.\d+/g, '');
 
@@ -111,6 +119,10 @@ END:VCALENDAR`;
     const month = date.toLocaleString('default', { month: 'short' }).toUpperCase();
     const day = date.getDate();
     const year = date.getFullYear();
+    const isRange = event.dateType === 'range' && event.dateEnd;
+    const dateRangeText = isRange
+        ? `${date.toLocaleString('default', { day: 'numeric', month: 'long' })} – ${new Date(event.dateEnd).toLocaleString('default', { day: 'numeric', month: 'long', year: 'numeric' })}`
+        : null;
 
     return (
         <div className="min-h-screen bg-white font-sans pb-20">
@@ -126,18 +138,22 @@ END:VCALENDAR`;
 
                 <div className="absolute bottom-0 left-0 w-full p-8 md:p-12 z-20">
                     <div className="container mx-auto">
+                        {event.category && (
                         <span className="bg-primary text-white font-bold px-4 py-1.5 rounded-full uppercase tracking-wider text-xs mb-4 inline-block">{event.category}</span>
+                    )}
                         <h1 className="text-4xl md:text-6xl font-display font-bold text-white mb-6 leading-tight max-w-4xl">{event.title}</h1>
 
                         <div className="flex flex-wrap gap-6 text-white/90">
                             <div className="flex items-center gap-2">
                                 <Calendar className="text-accent" />
-                                <span className="text-lg font-medium">{month} {day}, {year}</span>
+                                <span className="text-lg font-medium">{isRange ? dateRangeText : `${month} ${day}, ${year}`}</span>
                             </div>
-                            <div className="flex items-center gap-2">
-                                <Clock className="text-accent" />
-                                <span className="text-lg font-medium">{event.time}</span>
-                            </div>
+                            {!isRange && event.time && (
+                                <div className="flex items-center gap-2">
+                                    <Clock className="text-accent" />
+                                    <span className="text-lg font-medium">{event.time}</span>
+                                </div>
+                            )}
                             <div className="flex items-center gap-2">
                                 <MapPin className="text-accent" />
                                 <span className="text-lg font-medium">{event.location}</span>
@@ -174,8 +190,8 @@ END:VCALENDAR`;
                         <div className="space-y-6">
                             <div>
                                 <label className="block text-xs font-bold text-gray-400 uppercase tracking-wider mb-1">When</label>
-                                <p className="text-gray-900 font-medium text-lg">{month} {day}, {year}</p>
-                                <p className="text-gray-500">{event.time}</p>
+                                <p className="text-gray-900 font-medium text-lg">{isRange ? dateRangeText : `${month} ${day}, ${year}`}</p>
+                                {!isRange && event.time && <p className="text-gray-500">{event.time}</p>}
                             </div>
                             <div>
                                 <label className="block text-xs font-bold text-gray-400 uppercase tracking-wider mb-1">Where</label>

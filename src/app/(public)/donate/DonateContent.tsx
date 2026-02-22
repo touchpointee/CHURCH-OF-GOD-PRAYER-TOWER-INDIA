@@ -1,6 +1,6 @@
 "use client";
 
-import { Heart, CreditCard, Gift, CheckCircle } from "lucide-react";
+import { Heart, Gift } from "lucide-react";
 import { useLanguage } from "@/contexts/LanguageContext";
 
 interface DonateContentProps {
@@ -32,18 +32,8 @@ export default function DonateContent({ donation }: DonateContentProps) {
             <h2 className="text-3xl font-display font-bold text-gray-900 mb-4">{t("donate.waysToGive")}</h2>
             <p className="text-gray-500">{t("donate.chooseConvenient")}</p>
           </div>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            <div className="bg-white p-8 rounded-3xl shadow-lg border border-gray-100 text-center hover:transform hover:-translate-y-2 transition-all duration-300">
-              <div className="w-16 h-16 bg-gray-50 text-primary rounded-2xl flex items-center justify-center mx-auto mb-6">
-                <CreditCard size={32} />
-              </div>
-              <h3 className="text-xl font-bold mb-3">{t("donate.onlineGiving")}</h3>
-              <p className="text-gray-500 text-sm mb-6">{t("donate.onlineGivingDesc")}</p>
-              <button disabled className="bg-gray-200 text-gray-500 font-bold py-3 px-8 rounded-full w-full cursor-not-allowed">
-                {t("donate.comingSoon")}
-              </button>
-            </div>
-            <div className="bg-white p-8 rounded-3xl shadow-xl transform scale-105 border border-primary/20 text-center relative overflow-hidden">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-3xl mx-auto">
+            <div className="bg-white p-8 rounded-3xl shadow-xl border border-primary/20 text-center relative overflow-hidden">
               <div className="absolute top-0 right-0 p-4 opacity-5">
                 <Heart size={100} className="text-accent" />
               </div>
@@ -83,7 +73,7 @@ export default function DonateContent({ donation }: DonateContentProps) {
               </div>
               <h3 className="text-xl font-bold mb-3">{t("donate.qrCodeUpi")}</h3>
               <p className="text-gray-500 text-sm mb-6">{t("donate.scanQrCodeDesc")}</p>
-              <div className="w-32 h-32 bg-gray-50 mx-auto rounded-lg flex items-center justify-center mb-4 border border-gray-100 p-1">
+              <div className="w-56 h-56 sm:w-64 sm:h-64 bg-gray-50 mx-auto rounded-lg flex items-center justify-center mb-4 border border-gray-100 p-2">
                 {donation && donation.qrCodeUrl ? (
                   <img src={donation.qrCodeUrl} alt="QR Code" className="w-full h-full object-contain rounded" />
                 ) : (
@@ -91,39 +81,6 @@ export default function DonateContent({ donation }: DonateContentProps) {
                 )}
               </div>
               <p className="text-xs font-mono bg-gray-100 py-2 rounded text-gray-500">{t("donate.scanToPay")}</p>
-            </div>
-          </div>
-        </div>
-        <div className="mt-24 max-w-4xl mx-auto">
-          <div className="bg-white border border-gray-100 rounded-3xl p-8 md:p-12 flex flex-col md:flex-row items-center gap-8 shadow-sm">
-            <div className="flex-1">
-              <span className="text-accent font-bold uppercase tracking-wider text-xs mb-2 block">{t("donate.yourImpact")}</span>
-              <h3 className="text-3xl font-display font-bold text-gray-900 mb-4">{t("donate.whereDoesDonationGo")}</h3>
-              <ul className="space-y-3">
-                <li className="flex items-start gap-3">
-                  <CheckCircle size={20} className="text-accent flex-shrink-0 mt-1" />
-                  <span className="text-gray-600">{t("donate.impact1")}</span>
-                </li>
-                <li className="flex items-start gap-3">
-                  <CheckCircle size={20} className="text-accent flex-shrink-0 mt-1" />
-                  <span className="text-gray-600">{t("donate.impact2")}</span>
-                </li>
-                <li className="flex items-start gap-3">
-                  <CheckCircle size={20} className="text-accent flex-shrink-0 mt-1" />
-                  <span className="text-gray-600">{t("donate.impact3")}</span>
-                </li>
-                <li className="flex items-start gap-3">
-                  <CheckCircle size={20} className="text-accent flex-shrink-0 mt-1" />
-                  <span className="text-gray-600">{t("donate.impact4")}</span>
-                </li>
-              </ul>
-            </div>
-            <div className="flex-1 w-full">
-              <img
-                src="https://lh3.googleusercontent.com/aida-public/AB6AXuAqU3s_dBFBeBwsrCfYk1v_MUxpJWi7ExUdPa3T13c5T8JHpfmJ6OZ3kY6cGZK6jlv4uBpVSNiVG_Mc419ykfHBdPIglZjswFpAzSF1J2Hk_emh9G-BmCfk1l6JrsOmtK0KfHxMOjrDnao99hzwIkCKpr03XZWvGkEkbz2jZ2DbGJ5OPHp2Lh1visQq23yAObbXbMa8pWegGYovCamiXIXm7-5B2whHYNhHjid_C2CHn4BFEccndwkP9vvisCY1n2ijfukzsCklvdo"
-                alt={t("donate.yourImpact")}
-                className="rounded-2xl shadow-lg w-full h-64 object-cover"
-              />
             </div>
           </div>
         </div>

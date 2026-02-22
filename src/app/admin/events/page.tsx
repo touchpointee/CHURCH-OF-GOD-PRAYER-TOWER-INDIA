@@ -84,11 +84,19 @@ export default function EventsManager() {
                                             <span className="font-bold text-gray-900">{event.title}</span>
                                         </div>
                                     </td>
-                                    <td className="px-6 py-4 text-gray-600">{new Date(event.date).toLocaleDateString()}</td>
+                                    <td className="px-6 py-4 text-gray-600">
+                                        {event.dateType === 'range' && event.dateEnd
+                                            ? `${new Date(event.date).toLocaleDateString('en-GB', { day: 'numeric', month: 'short' })} – ${new Date(event.dateEnd).toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' })}`
+                                            : new Date(event.date).toLocaleDateString()}
+                                    </td>
                                     <td className="px-6 py-4">
-                                        <span className="bg-gray-100 text-gray-600 px-2 py-1 rounded text-xs font-bold uppercase tracking-wider">
-                                            {event.category}
-                                        </span>
+                                        {event.category ? (
+                                            <span className="bg-gray-100 text-gray-600 px-2 py-1 rounded text-xs font-bold uppercase tracking-wider">
+                                                {event.category}
+                                            </span>
+                                        ) : (
+                                            <span className="text-gray-400 text-xs">—</span>
+                                        )}
                                     </td>
                                     <td className="px-6 py-4 text-gray-600">{event.location}</td>
                                     <td className="px-6 py-4 text-right">
