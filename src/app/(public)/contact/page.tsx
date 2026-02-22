@@ -14,7 +14,6 @@ export default function ContactPage() {
 
     const { register, handleSubmit, reset, formState: { errors } } = useForm();
 
-    const { t, lang } = useLanguage();
     useEffect(() => {
         const fetchLocations = async () => {
             try {

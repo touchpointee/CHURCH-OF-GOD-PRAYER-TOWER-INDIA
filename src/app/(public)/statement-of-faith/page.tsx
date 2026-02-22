@@ -29,7 +29,6 @@ export default function StatementOfFaithPage() {
         reference: "John 3:16"
     });
 
-    const { t, lang } = useLanguage();
     useEffect(() => {
         const fetchData = async () => {
             try {
