@@ -17,14 +17,10 @@ const SocialSettingsSchema = new mongoose.Schema({
         type: String,
         default: '',
     },
-    contactEmail: {
-        type: String,
-        default: '',
-    },
-    contactPhone: {
-        type: String,
-        default: '',
-    },
+    contactEmail: { type: String, default: '' },
+    contactPhone: { type: String, default: '' },
+    contactEmails: { type: [String], default: [] },
+    contactPhones: { type: [String], default: [] },
 }, { timestamps: true });
 
 // Prevent overwrite if model already exists

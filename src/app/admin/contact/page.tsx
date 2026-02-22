@@ -74,13 +74,32 @@ export default function AdminContactPage() {
         setValue('detailsMl', location.detailsMl ?? '');
     };
 
-    const handleDelete = async (id: string) => {
+    const handleDeleteLocation = async (id: string) => {
         if (!confirm("Are you sure you want to delete this location?")) return;
         try {
             await axios.delete(`/api/contact/locations/${id}`);
             fetchLocations();
         } catch (error) {
             console.error("Failed to delete location", error);
+        }
+    };
+
+    const [deletingMessageId, setDeletingMessageId] = useState<string | null>(null);
+    const handleDeleteMessage = async (id: string) => {
+        if (!confirm("Are you sure you want to delete this message?")) return;
+        setDeletingMessageId(id);
+        try {
+            const res = await axios.delete(`/api/contact/messages/${id}`);
+            if (res.data.success) {
+                setMessages(messages.filter((m) => m._id !== id));
+            } else {
+                alert(res.data.error || "Failed to delete message");
+            }
+        } catch (error: any) {
+            console.error("Failed to delete message", error);
+            alert(error.response?.data?.error || "Failed to delete message");
+        } finally {
+            setDeletingMessageId(null);
         }
     };
 
@@ -126,7 +145,7 @@ export default function AdminContactPage() {
                                 </div>
                                 <div className="flex gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
                                     <button onClick={() => handleEdit(loc)} className="p-2 text-blue-600 hover:bg-blue-50 rounded-lg"><Edit2 size={18} /></button>
-                                    <button onClick={() => handleDelete(loc._id)} className="p-2 text-red-600 hover:bg-red-50 rounded-lg"><Trash2 size={18} /></button>
+                                    <button onClick={() => handleDeleteLocation(loc._id)} className="p-2 text-red-600 hover:bg-red-50 rounded-lg"><Trash2 size={18} /></button>
                                 </div>
                             </div>
                         ))}
@@ -196,11 +215,12 @@ export default function AdminContactPage() {
                                     <th className="p-4 font-bold text-gray-600 text-sm">From</th>
                                     <th className="p-4 font-bold text-gray-600 text-sm">Email / Phone</th>
                                     <th className="p-4 font-bold text-gray-600 text-sm">Message</th>
+                                    <th className="p-4 font-bold text-gray-600 text-sm text-right">Actions</th>
                                 </tr>
                             </thead>
                             <tbody className="divide-y divide-gray-100">
                                 {loading ? (
-                                    <tr><td colSpan={4} className="p-8 text-center text-gray-400">Loading messages...</td></tr>
+                                    <tr><td colSpan={5} className="p-8 text-center text-gray-400">Loading messages...</td></tr>
                                 ) : messages.map((msg) => (
                                     <tr key={msg._id} className="hover:bg-gray-50 transition-colors">
                                         <td className="p-4 text-gray-500 text-sm whitespace-nowrap">
@@ -217,10 +237,21 @@ export default function AdminContactPage() {
                                         <td className="p-4 text-gray-700 max-w-md">
                                             {msg.message}
                                         </td>
+                                        <td className="p-4 text-right">
+                                            <button
+                                                type="button"
+                                                onClick={() => handleDeleteMessage(msg._id)}
+                                                disabled={deletingMessageId === msg._id}
+                                                className="p-2 text-gray-400 hover:text-red-500 hover:bg-red-50 rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                                                title="Delete"
+                                            >
+                                                {deletingMessageId === msg._id ? <Loader2 size={18} className="animate-spin" /> : <Trash2 size={18} />}
+                                            </button>
+                                        </td>
                                     </tr>
                                 ))}
                                 {!loading && messages.length === 0 && (
-                                    <tr><td colSpan={4} className="p-8 text-center text-gray-500 italic">No messages received yet.</td></tr>
+                                    <tr><td colSpan={5} className="p-8 text-center text-gray-500 italic">No messages received yet.</td></tr>
                                 )}
                             </tbody>
                         </table>

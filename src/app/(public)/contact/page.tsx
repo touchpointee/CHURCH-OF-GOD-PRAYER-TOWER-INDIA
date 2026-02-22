@@ -9,7 +9,7 @@ import { useLanguage } from "@/contexts/LanguageContext";
 export default function ContactPage() {
     const { t, lang } = useLanguage();
     const [locations, setLocations] = useState<any[]>([]);
-    const [contactInfo, setContactInfo] = useState<{ contactEmail: string; contactPhone: string }>({ contactEmail: '', contactPhone: '' });
+    const [contactInfo, setContactInfo] = useState<{ contactEmails: string[]; contactPhones: string[] }>({ contactEmails: [], contactPhones: [] });
     const [loading, setLoading] = useState(true);
     const [submitStatus, setSubmitStatus] = useState<'idle' | 'submitting' | 'success' | 'error'>('idle');
 
@@ -36,9 +36,10 @@ export default function ContactPage() {
             try {
                 const res = await axios.get('/api/settings/social');
                 if (res.data.success && res.data.data) {
+                    const d = res.data.data;
                     setContactInfo({
-                        contactEmail: res.data.data.contactEmail ?? '',
-                        contactPhone: res.data.data.contactPhone ?? '',
+                        contactEmails: Array.isArray(d.contactEmails) ? d.contactEmails : (d.contactEmail ? [d.contactEmail] : []),
+                        contactPhones: Array.isArray(d.contactPhones) ? d.contactPhones : (d.contactPhone ? [d.contactPhone] : []),
                     });
                 }
             } catch (error) {
@@ -89,26 +90,26 @@ export default function ContactPage() {
                                     <p className="text-gray-500 italic">{t("contact.noLocationDetails")}</p>
                                 )}
 
-                                {(contactInfo.contactEmail || contactInfo.contactPhone) && (
+                                {(contactInfo.contactEmails?.some(Boolean) || contactInfo.contactPhones?.some(Boolean)) && (
                                     <div className="space-y-4 pt-4">
-                                        {contactInfo.contactEmail && (
-                                            <div className="flex items-start gap-4">
+                                        {contactInfo.contactEmails?.filter(Boolean).map((email, i) => (
+                                            <div key={`email-${i}`} className="flex items-start gap-4">
                                                 <div className="bg-white p-3 rounded-lg border border-gray-200"><Mail size={20} className="text-gray-700" /></div>
                                                 <div>
                                                     <h4 className="font-bold text-sm text-gray-500 uppercase tracking-wider mb-1">{t("contact.email")}</h4>
-                                                    <a href={`mailto:${contactInfo.contactEmail}`} className="font-medium text-lg text-accent hover:underline">{contactInfo.contactEmail}</a>
+                                                    <a href={`mailto:${email}`} className="font-medium text-lg text-accent hover:underline">{email}</a>
                                                 </div>
                                             </div>
-                                        )}
-                                        {contactInfo.contactPhone && (
-                                            <div className="flex items-start gap-4">
+                                        ))}
+                                        {contactInfo.contactPhones?.filter(Boolean).map((phone, i) => (
+                                            <div key={`phone-${i}`} className="flex items-start gap-4">
                                                 <div className="bg-white p-3 rounded-lg border border-gray-200"><Phone size={20} className="text-gray-700" /></div>
                                                 <div>
                                                     <h4 className="font-bold text-sm text-gray-500 uppercase tracking-wider mb-1">{t("contact.phone")}</h4>
-                                                    <a href={`tel:${contactInfo.contactPhone.replace(/\s/g, '')}`} className="font-medium text-lg text-accent hover:underline">{contactInfo.contactPhone}</a>
+                                                    <a href={`tel:${phone.replace(/\s/g, '')}`} className="font-medium text-lg text-accent hover:underline">{phone}</a>
                                                 </div>
                                             </div>
-                                        )}
+                                        ))}
                                     </div>
                                 )}
                             </div>

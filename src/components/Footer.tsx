@@ -14,8 +14,8 @@ export default function Footer() {
         facebookUrl: '',
         youtubeUrl: '',
         instagramUrl: '',
-        contactEmail: '',
-        contactPhone: '',
+        contactEmails: [] as string[],
+        contactPhones: [] as string[],
     });
 
     useEffect(() => {
@@ -24,7 +24,10 @@ export default function Footer() {
                 const res = await fetch('/api/settings/social');
                 const data = await res.json();
                 if (data.success && data.data) {
-                    setSocialUrls(prev => ({ ...prev, ...data.data }));
+                    const d = data.data;
+                    const contactEmails = Array.isArray(d.contactEmails) ? d.contactEmails : (d.contactEmail ? [d.contactEmail] : []);
+                    const contactPhones = Array.isArray(d.contactPhones) ? d.contactPhones : (d.contactPhone ? [d.contactPhone] : []);
+                    setSocialUrls(prev => ({ ...prev, ...d, contactEmails, contactPhones }));
                 }
             } catch (error) {
                 console.error("Failed to load social settings", error);
@@ -137,22 +140,22 @@ export default function Footer() {
                             </button>
                         </form>
                         <div className="space-y-4 text-sm text-gray-400 font-sans">
-                            {socialUrls.contactPhone && (
-                                <div className="flex items-start group">
+                            {socialUrls.contactPhones?.filter(Boolean).map((phone, i) => (
+                                <div key={`phone-${i}`} className="flex items-start group">
                                     <div className="p-2 bg-white/5 rounded-full mr-3 group-hover:bg-accent/10 transition-colors">
                                         <Phone size={16} className="text-accent" />
                                     </div>
-                                    <a href={`tel:${socialUrls.contactPhone.replace(/\s/g, '')}`} className="mt-1 hover:text-accent transition-colors">{socialUrls.contactPhone}</a>
+                                    <a href={`tel:${phone.replace(/\s/g, '')}`} className="mt-1 hover:text-accent transition-colors">{phone}</a>
                                 </div>
-                            )}
-                            {socialUrls.contactEmail && (
-                                <div className="flex items-start group">
+                            ))}
+                            {socialUrls.contactEmails?.filter(Boolean).map((email, i) => (
+                                <div key={`email-${i}`} className="flex items-start group">
                                     <div className="p-2 bg-white/5 rounded-full mr-3 group-hover:bg-accent/10 transition-colors">
                                         <Mail size={16} className="text-accent" />
                                     </div>
-                                    <a href={`mailto:${socialUrls.contactEmail}`} className="mt-1 hover:text-accent transition-colors">{socialUrls.contactEmail}</a>
+                                    <a href={`mailto:${email}`} className="mt-1 hover:text-accent transition-colors">{email}</a>
                                 </div>
-                            )}
+                            ))}
                         </div>
                     </div>
                 </div>
