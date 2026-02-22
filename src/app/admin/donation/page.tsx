@@ -69,7 +69,8 @@ export default function DonationSettingsPage() {
                 headers: { 'Content-Type': 'multipart/form-data' },
             });
             if (res.data.success) {
-                setSettings({ ...settings, qrCodeUrl: res.data.imageUrl });
+                const url = res.data.url ?? res.data.uploads?.[0]?.url;
+                if (url) setSettings(prev => ({ ...prev, qrCodeUrl: url }));
             }
         } catch (error) {
             console.error('Upload failed:', error);

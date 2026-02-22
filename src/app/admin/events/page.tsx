@@ -28,8 +28,17 @@ export default function EventsManager() {
 
     const handleDelete = async (id: string) => {
         if (!confirm('Are you sure you want to delete this event?')) return;
-        // TODO: Implement delete API
-        alert('Delete functionality to be implemented in API');
+        try {
+            const res = await axios.delete(`/api/events/${id}`);
+            if (res.data.success) {
+                setEvents(events.filter((e: any) => e._id !== id));
+            } else {
+                alert(res.data.error || 'Failed to delete event');
+            }
+        } catch (error: any) {
+            console.error('Failed to delete event', error);
+            alert(error.response?.data?.error || 'Failed to delete event');
+        }
     };
 
     if (loading) return <div>Loading...</div>;
@@ -67,7 +76,11 @@ export default function EventsManager() {
                                 <tr key={event._id} className="hover:bg-gray-50 transition-colors">
                                     <td className="px-6 py-4">
                                         <div className="flex items-center gap-3">
-                                            <img src={event.imageUrl} alt="" className="w-10 h-10 rounded-lg object-cover" />
+                                            {event.imageUrl ? (
+                                                <img src={event.imageUrl} alt="" className="w-10 h-10 rounded-lg object-cover" />
+                                            ) : (
+                                                <div className="w-10 h-10 rounded-lg bg-gray-200 flex items-center justify-center text-gray-400 text-xs">—</div>
+                                            )}
                                             <span className="font-bold text-gray-900">{event.title}</span>
                                         </div>
                                     </td>
@@ -80,9 +93,9 @@ export default function EventsManager() {
                                     <td className="px-6 py-4 text-gray-600">{event.location}</td>
                                     <td className="px-6 py-4 text-right">
                                         <div className="flex items-center justify-end gap-2">
-                                            <button className="text-gray-400 hover:text-primary transition-colors p-2">
+                                            <Link href={`/admin/events/${event._id}/edit`} className="text-gray-400 hover:text-primary transition-colors p-2 inline-flex">
                                                 <Edit2 size={18} />
-                                            </button>
+                                            </Link>
                                             <button onClick={() => handleDelete(event._id)} className="text-gray-400 hover:text-red-500 transition-colors p-2">
                                                 <Trash2 size={18} />
                                             </button>

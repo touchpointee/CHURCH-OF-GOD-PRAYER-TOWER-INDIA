@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { Save, Facebook, Youtube, Instagram, MessageCircle } from "lucide-react";
+import { Save, Facebook, Youtube, Instagram, MessageCircle, Mail, Phone } from "lucide-react";
 
 export default function SocialSettingsPage() {
     const [loading, setLoading] = useState(true);
@@ -13,6 +13,8 @@ export default function SocialSettingsPage() {
         youtubeUrl: '',
         instagramUrl: '',
         whatsappUrl: '',
+        contactEmail: '',
+        contactPhone: '',
     });
 
     useEffect(() => {
@@ -141,6 +143,38 @@ export default function SocialSettingsPage() {
                                 placeholder="https://wa.me/1234567890"
                                 className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent outline-none transition-all"
                             />
+                        </div>
+                    </div>
+
+                    <div className="pt-6 border-t border-gray-200">
+                        <h3 className="text-lg font-semibold text-gray-800 mb-4">Contact (Phone & Email)</h3>
+                        <div className="grid gap-6">
+                            <div className="space-y-2">
+                                <label className="flex items-center gap-2 text-sm font-medium text-gray-700">
+                                    <Mail size={18} className="text-gray-600" /> Contact Email
+                                </label>
+                                <input
+                                    type="email"
+                                    name="contactEmail"
+                                    value={formData.contactEmail}
+                                    onChange={handleChange}
+                                    placeholder="contact@example.org"
+                                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent outline-none transition-all"
+                                />
+                            </div>
+                            <div className="space-y-2">
+                                <label className="flex items-center gap-2 text-sm font-medium text-gray-700">
+                                    <Phone size={18} className="text-gray-600" /> Contact Phone
+                                </label>
+                                <input
+                                    type="tel"
+                                    name="contactPhone"
+                                    value={formData.contactPhone}
+                                    onChange={handleChange}
+                                    placeholder="+91 98765 43210"
+                                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent outline-none transition-all"
+                                />
+                            </div>
                         </div>
                     </div>
 

@@ -15,6 +15,8 @@ export async function GET() {
                 youtubeUrl: '',
                 instagramUrl: '',
                 whatsappUrl: '',
+                contactEmail: '',
+                contactPhone: '',
             };
         }
 

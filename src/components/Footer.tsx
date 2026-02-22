@@ -10,7 +10,13 @@ import { useLanguage } from "@/contexts/LanguageContext";
 
 export default function Footer() {
     const { t } = useLanguage();
-    const [socialUrls, setSocialUrls] = useState({ facebookUrl: '', youtubeUrl: '', instagramUrl: '' });
+    const [socialUrls, setSocialUrls] = useState({
+        facebookUrl: '',
+        youtubeUrl: '',
+        instagramUrl: '',
+        contactEmail: '',
+        contactPhone: '',
+    });
 
     useEffect(() => {
         const fetchSocials = async () => {
@@ -18,7 +24,7 @@ export default function Footer() {
                 const res = await fetch('/api/settings/social');
                 const data = await res.json();
                 if (data.success && data.data) {
-                    setSocialUrls(data.data);
+                    setSocialUrls(prev => ({ ...prev, ...data.data }));
                 }
             } catch (error) {
                 console.error("Failed to load social settings", error);
@@ -131,19 +137,22 @@ export default function Footer() {
                             </button>
                         </form>
                         <div className="space-y-4 text-sm text-gray-400 font-sans">
-                            <div className="flex items-start group">
-                                <div className="p-2 bg-white/5 rounded-full mr-3 group-hover:bg-accent/10 transition-colors">
-                                    <Phone size={16} className="text-accent" />
+                            {socialUrls.contactPhone && (
+                                <div className="flex items-start group">
+                                    <div className="p-2 bg-white/5 rounded-full mr-3 group-hover:bg-accent/10 transition-colors">
+                                        <Phone size={16} className="text-accent" />
+                                    </div>
+                                    <a href={`tel:${socialUrls.contactPhone.replace(/\s/g, '')}`} className="mt-1 hover:text-accent transition-colors">{socialUrls.contactPhone}</a>
                                 </div>
-                                <span className="mt-1">+91 9747555678</span>
-                            </div>
-                            <div className="flex items-start group">
-                                <div className="p-2 bg-white/5 rounded-full mr-3 group-hover:bg-accent/10 transition-colors">
-                                    <Mail size={16} className="text-accent" />
+                            )}
+                            {socialUrls.contactEmail && (
+                                <div className="flex items-start group">
+                                    <div className="p-2 bg-white/5 rounded-full mr-3 group-hover:bg-accent/10 transition-colors">
+                                        <Mail size={16} className="text-accent" />
+                                    </div>
+                                    <a href={`mailto:${socialUrls.contactEmail}`} className="mt-1 hover:text-accent transition-colors">{socialUrls.contactEmail}</a>
                                 </div>
-                                <span className="mt-1">prayer@cogindia.org</span>
-                            </div>
-
+                            )}
                         </div>
                     </div>
                 </div>

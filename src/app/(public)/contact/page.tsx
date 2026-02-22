@@ -2,13 +2,14 @@
 
 import { useState, useEffect } from "react";
 import axios from "axios";
-import { Mail, Phone, MapPin, Send, MessageCircle } from "lucide-react";
+import { Mail, Phone, Send } from "lucide-react";
 import { useForm } from "react-hook-form";
 import { useLanguage } from "@/contexts/LanguageContext";
 
 export default function ContactPage() {
     const { t, lang } = useLanguage();
     const [locations, setLocations] = useState<any[]>([]);
+    const [contactInfo, setContactInfo] = useState<{ contactEmail: string; contactPhone: string }>({ contactEmail: '', contactPhone: '' });
     const [loading, setLoading] = useState(true);
     const [submitStatus, setSubmitStatus] = useState<'idle' | 'submitting' | 'success' | 'error'>('idle');
 
@@ -29,6 +30,23 @@ export default function ContactPage() {
         };
         fetchLocations();
     }, [lang]);
+
+    useEffect(() => {
+        const fetchContactInfo = async () => {
+            try {
+                const res = await axios.get('/api/settings/social');
+                if (res.data.success && res.data.data) {
+                    setContactInfo({
+                        contactEmail: res.data.data.contactEmail ?? '',
+                        contactPhone: res.data.data.contactPhone ?? '',
+                    });
+                }
+            } catch (error) {
+                console.error("Failed to fetch contact info", error);
+            }
+        };
+        fetchContactInfo();
+    }, []);
 
     const onSubmit = async (data: any) => {
         setSubmitStatus('submitting');
@@ -71,23 +89,28 @@ export default function ContactPage() {
                                     <p className="text-gray-500 italic">{t("contact.noLocationDetails")}</p>
                                 )}
 
-                                <div className="flex items-start gap-4 pt-4">
-                                    <div className="bg-white p-3 rounded-lg border border-gray-200"><Mail size={20} className="text-gray-700" /></div>
-                                    <div>
-                                        <h4 className="font-bold text-sm text-gray-500 uppercase tracking-wider mb-1">{t("contact.email")}</h4>
-                                        <p className="font-medium text-lg text-accent">prayer@cogindia.org</p>
+                                {(contactInfo.contactEmail || contactInfo.contactPhone) && (
+                                    <div className="space-y-4 pt-4">
+                                        {contactInfo.contactEmail && (
+                                            <div className="flex items-start gap-4">
+                                                <div className="bg-white p-3 rounded-lg border border-gray-200"><Mail size={20} className="text-gray-700" /></div>
+                                                <div>
+                                                    <h4 className="font-bold text-sm text-gray-500 uppercase tracking-wider mb-1">{t("contact.email")}</h4>
+                                                    <a href={`mailto:${contactInfo.contactEmail}`} className="font-medium text-lg text-accent hover:underline">{contactInfo.contactEmail}</a>
+                                                </div>
+                                            </div>
+                                        )}
+                                        {contactInfo.contactPhone && (
+                                            <div className="flex items-start gap-4">
+                                                <div className="bg-white p-3 rounded-lg border border-gray-200"><Phone size={20} className="text-gray-700" /></div>
+                                                <div>
+                                                    <h4 className="font-bold text-sm text-gray-500 uppercase tracking-wider mb-1">{t("contact.phone")}</h4>
+                                                    <a href={`tel:${contactInfo.contactPhone.replace(/\s/g, '')}`} className="font-medium text-lg text-accent hover:underline">{contactInfo.contactPhone}</a>
+                                                </div>
+                                            </div>
+                                        )}
                                     </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div className="mt-8 pt-6 border-t border-gray-200 flex gap-4">
-                            {/* Social Icons */}
-                            <div className="w-10 h-10 rounded-full bg-white border border-gray-200 flex items-center justify-center hover:bg-black hover:text-white transition-colors cursor-pointer text-gray-500">
-                                <MessageCircle size={20} />
-                            </div>
-                            <div className="w-10 h-10 rounded-full bg-white border border-gray-200 flex items-center justify-center hover:bg-black hover:text-white transition-colors cursor-pointer text-gray-500">
-                                <Phone size={20} />
+                                )}
                             </div>
                         </div>
                     </div>
