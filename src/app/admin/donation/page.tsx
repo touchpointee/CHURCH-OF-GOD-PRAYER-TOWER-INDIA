@@ -8,7 +8,7 @@ interface DonationPoster {
   _id: string;
   title?: string;
   imageUrl: string;
-  paymentLink: string;
+  paymentLink?: string;
   order: number;
 }
 
@@ -59,15 +59,15 @@ export default function DonationSettingsPage() {
 
   const handleAddPoster = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!posterImageUrl.trim() || !paymentLink.trim()) {
-      alert('Please add a poster image and payment link.');
+    if (!posterImageUrl.trim()) {
+      alert('Please add a poster image.');
       return;
     }
     try {
       const res = await axios.post('/api/donation-posters', {
         title: title.trim() || undefined,
         imageUrl: posterImageUrl.trim(),
-        paymentLink: paymentLink.trim(),
+        paymentLink: paymentLink.trim() || undefined,
         order: posters.length,
       });
       if (res.data.success) {
@@ -99,7 +99,7 @@ export default function DonationSettingsPage() {
     <div className="p-8">
       <h1 className="text-2xl font-bold mb-6">Donation Posters</h1>
       <p className="text-gray-600 mb-8 max-w-2xl">
-        Upload posters and set a payment link for each. They will appear on the Donate page as cards with a button linking to the payment URL.
+        Upload posters and optionally set a payment link for each. They appear on the Donate page; if a payment link is set, a button will link to it.
       </p>
 
       <form onSubmit={handleAddPoster} className="bg-white p-6 rounded-xl shadow-sm border border-gray-100 max-w-2xl mb-10">
@@ -133,19 +133,18 @@ export default function DonationSettingsPage() {
             />
           </div>
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">Payment link *</label>
+            <label className="block text-sm font-medium text-gray-700 mb-1">Payment link (optional)</label>
             <input
               type="url"
               value={paymentLink}
               onChange={(e) => setPaymentLink(e.target.value)}
               className="w-full border rounded-lg px-3 py-2"
               placeholder="https://..."
-              required
             />
           </div>
           <button
             type="submit"
-            disabled={!posterImageUrl.trim() || !paymentLink.trim() || uploading}
+            disabled={!posterImageUrl.trim() || uploading}
             className="bg-primary text-white px-6 py-2.5 rounded-lg hover:bg-gray-900 transition-colors flex items-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
           >
             <Plus size={18} /> Add poster
@@ -166,20 +165,26 @@ export default function DonationSettingsPage() {
                 </div>
                 <div className="flex-1 min-w-0">
                   {p.title && <p className="font-medium text-gray-900">{p.title}</p>}
-                  <a href={p.paymentLink} target="_blank" rel="noopener noreferrer" className="text-sm text-accent hover:underline truncate block">
-                    {p.paymentLink}
-                  </a>
+                  {p.paymentLink ? (
+                    <a href={p.paymentLink} target="_blank" rel="noopener noreferrer" className="text-sm text-accent hover:underline truncate block">
+                      {p.paymentLink}
+                    </a>
+                  ) : (
+                    <span className="text-sm text-gray-400">No payment link</span>
+                  )}
                 </div>
                 <div className="flex items-center gap-2">
-                  <a
-                    href={p.paymentLink}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="text-gray-600 hover:text-accent p-2"
-                    title="Open link"
-                  >
-                    <ExternalLink size={18} />
-                  </a>
+                  {p.paymentLink && (
+                    <a
+                      href={p.paymentLink}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-gray-600 hover:text-accent p-2"
+                      title="Open link"
+                    >
+                      <ExternalLink size={18} />
+                    </a>
+                  )}
                   <button
                     type="button"
                     onClick={() => handleDelete(p._id)}

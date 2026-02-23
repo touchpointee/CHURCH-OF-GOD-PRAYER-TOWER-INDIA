@@ -7,7 +7,7 @@ interface DonationPoster {
   _id: string;
   title?: string;
   imageUrl: string;
-  paymentLink: string;
+  paymentLink?: string;
   order: number;
 }
 
@@ -62,28 +62,30 @@ export default function DonateContent({ posters }: DonateContentProps) {
               {posters.map((poster) => (
                 <div
                   key={poster._id}
-                  className="bg-white rounded-2xl shadow-lg border border-gray-100 overflow-hidden hover:shadow-xl transition-shadow"
+                  className="bg-white rounded-2xl shadow-lg border border-gray-100 overflow-hidden hover:shadow-xl transition-shadow flex flex-col"
                 >
-                  <div className="aspect-[4/3] bg-gray-100 overflow-hidden">
+                  <div className="bg-gray-100 overflow-hidden flex justify-center items-start">
                     <img
                       src={poster.imageUrl}
                       alt={poster.title || t("donate.donate")}
-                      className="w-full h-full object-cover"
+                      className="w-full h-auto max-w-full object-contain"
                     />
                   </div>
-                  <div className="p-5">
+                  <div className="p-5 mt-auto">
                     {poster.title && (
                       <h3 className="font-bold text-gray-900 mb-3">{poster.title}</h3>
                     )}
-                    <a
-                      href={poster.paymentLink}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="w-full inline-flex items-center justify-center gap-2 bg-accent text-white font-bold py-3 px-6 rounded-full hover:bg-accent-hover transition-colors"
-                    >
-                      {t("donate.payOrDonate")}
-                      <ExternalLink size={18} />
-                    </a>
+                    {poster.paymentLink?.trim() ? (
+                      <a
+                        href={poster.paymentLink}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="w-full inline-flex items-center justify-center gap-2 bg-accent text-white font-bold py-3 px-6 rounded-full hover:bg-accent-hover transition-colors"
+                      >
+                        {t("donate.payOrDonate")}
+                        <ExternalLink size={18} />
+                      </a>
+                    ) : null}
                   </div>
                 </div>
               ))}

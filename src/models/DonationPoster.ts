@@ -11,7 +11,7 @@ const DonationPosterSchema = new mongoose.Schema({
     },
     paymentLink: {
         type: String,
-        required: [true, 'Payment link is required.'],
+        required: false,
     },
     order: {
         type: Number,
@@ -19,4 +19,8 @@ const DonationPosterSchema = new mongoose.Schema({
     },
 }, { timestamps: true });
 
-export default mongoose.models.DonationPoster || mongoose.model('DonationPoster', DonationPosterSchema);
+// Avoid using cached model with outdated schema (e.g. when paymentLink was required)
+if (mongoose.models.DonationPoster) {
+    delete mongoose.models.DonationPoster;
+}
+export default mongoose.model('DonationPoster', DonationPosterSchema);
