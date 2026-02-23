@@ -170,22 +170,32 @@ export default function HomeContent({ event, videos, galleryImages, donation }: 
                       <div className="space-y-4 mb-8">
                         <div>
                           <p className="text-xs text-gray-500 uppercase tracking-wide font-bold">{t("home.accountName")}</p>
-                          <p className="text-lg font-bold text-primary">{donation.accountName}</p>
+                          <p className="text-lg font-bold text-primary break-all">{donation.accountName}</p>
                         </div>
-                        <div className="grid grid-cols-2 gap-4">
-                          <div>
-                            <p className="text-xs text-gray-500 uppercase tracking-wide font-bold">{t("home.accountNumber")}</p>
-                            <p className="text-lg font-mono font-medium">{donation.accountNumber}</p>
-                          </div>
-                          <div>
-                            <p className="text-xs text-gray-500 uppercase tracking-wide font-bold">{t("home.ifscCode")}</p>
-                            <p className="text-lg font-mono font-medium">{donation.ifscCode}</p>
-                          </div>
+                        <div>
+                          <p className="text-xs text-gray-500 uppercase tracking-wide font-bold">{t("home.accountNumber")}</p>
+                          <p className="text-lg font-mono font-medium break-all">{donation.accountNumber}</p>
+                        </div>
+                        <div>
+                          <p className="text-xs text-gray-500 uppercase tracking-wide font-bold">{t("home.ifscCode")}</p>
+                          <p className="text-lg font-mono font-medium break-all">{donation.ifscCode}</p>
                         </div>
                         <div>
                           <p className="text-xs text-gray-500 uppercase tracking-wide font-bold">{t("home.bankName")}</p>
-                          <p className="text-gray-800 font-medium">{donation.bankName} <span className="text-gray-500 text-sm font-normal">{donation.branchName ? `- ${donation.branchName}` : ""}</span></p>
+                          <p className="text-gray-800 font-medium break-all">{donation.bankName} <span className="text-gray-500 text-sm font-normal">{donation.branchName ? `- ${donation.branchName}` : ""}</span></p>
                         </div>
+                        {donation.micrCode && (
+                          <div>
+                            <p className="text-xs text-gray-500 uppercase tracking-wide font-bold">{t("home.micrCode")}</p>
+                            <p className="text-lg font-mono font-medium break-all">{donation.micrCode}</p>
+                          </div>
+                        )}
+                        {donation.swiftCode && (
+                          <div>
+                            <p className="text-xs text-gray-500 uppercase tracking-wide font-bold">{t("home.swiftCode")}</p>
+                            <p className="text-lg font-mono font-medium break-all">{donation.swiftCode}</p>
+                          </div>
+                        )}
                       </div>
                     ) : (
                       <div className="text-center p-4 bg-gray-50 rounded-lg text-gray-500 mb-6">{t("home.detailsComingSoon")}</div>

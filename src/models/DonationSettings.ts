@@ -17,6 +17,14 @@ const DonationSettingsSchema = new mongoose.Schema({
         type: String,
         required: [true, 'Please provide an IFSC code.'],
     },
+    micrCode: {
+        type: String,
+        required: false,
+    },
+    swiftCode: {
+        type: String,
+        required: false,
+    },
     branchName: {
         type: String,
         required: false,

@@ -45,22 +45,34 @@ export default function DonateContent({ donation }: DonateContentProps) {
               <div className="bg-gray-50 rounded-xl p-4 text-left space-y-2 text-sm relative z-10 border border-gray-100">
                 {donation ? (
                   <>
-                    <div className="flex justify-between flex-wrap gap-2">
-                      <span className="text-gray-500">{t("donate.accountName")}:</span>
-                      <span className="font-bold text-gray-900 text-right">{donation.accountName}</span>
+                    <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-1 sm:gap-2">
+                      <span className="text-gray-500 shrink-0">{t("donate.accountName")}:</span>
+                      <span className="font-bold text-gray-900 break-all">{donation.accountName}</span>
                     </div>
-                    <div className="flex justify-between flex-wrap gap-2">
-                      <span className="text-gray-500">{t("donate.accountNo")}:</span>
-                      <span className="font-bold text-gray-900 font-mono text-right">{donation.accountNumber}</span>
+                    <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-1 sm:gap-2">
+                      <span className="text-gray-500 shrink-0">{t("donate.accountNo")}:</span>
+                      <span className="font-bold text-gray-900 font-mono break-all">{donation.accountNumber}</span>
                     </div>
-                    <div className="flex justify-between flex-wrap gap-2">
-                      <span className="text-gray-500">{t("donate.ifscCode")}:</span>
-                      <span className="font-bold text-gray-900 font-mono text-right">{donation.ifscCode}</span>
+                    <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-1 sm:gap-2">
+                      <span className="text-gray-500 shrink-0">{t("donate.ifscCode")}:</span>
+                      <span className="font-bold text-gray-900 font-mono break-all">{donation.ifscCode}</span>
                     </div>
-                    <div className="flex justify-between flex-wrap gap-2">
-                      <span className="text-gray-500">{t("donate.bank")}:</span>
-                      <span className="font-bold text-gray-900 text-right">{donation.bankName}</span>
+                    <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-1 sm:gap-2">
+                      <span className="text-gray-500 shrink-0">{t("donate.bank")}:</span>
+                      <span className="font-bold text-gray-900 break-all">{donation.bankName}</span>
                     </div>
+                    {donation.micrCode && (
+                      <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-1 sm:gap-2">
+                        <span className="text-gray-500 shrink-0">{t("donate.micrCode")}:</span>
+                        <span className="font-bold text-gray-900 font-mono break-all">{donation.micrCode}</span>
+                      </div>
+                    )}
+                    {donation.swiftCode && (
+                      <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-1 sm:gap-2">
+                        <span className="text-gray-500 shrink-0">{t("donate.swiftCode")}:</span>
+                        <span className="font-bold text-gray-900 font-mono break-all">{donation.swiftCode}</span>
+                      </div>
+                    )}
                   </>
                 ) : (
                   <p className="text-center text-gray-400 italic">{t("donate.bankDetailsPending")}</p>

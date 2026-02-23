@@ -10,6 +10,8 @@ export default function DonationSettingsPage() {
         accountNumber: '',
         bankName: '',
         ifscCode: '',
+        micrCode: '',
+        swiftCode: '',
         branchName: '',
         qrCodeUrl: ''
     });
@@ -142,6 +144,30 @@ export default function DonationSettingsPage() {
                                     placeholder="Enter Bank Name"
                                     required
                                 />
+                            </div>
+                            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                <div>
+                                    <label className="block text-sm font-medium text-gray-700 mb-1">MICR Code (Optional)</label>
+                                    <input
+                                        type="text"
+                                        name="micrCode"
+                                        value={settings.micrCode}
+                                        onChange={handleChange}
+                                        className="w-full border rounded-lg px-3 py-2 font-mono"
+                                        placeholder="Enter MICR Code"
+                                    />
+                                </div>
+                                <div>
+                                    <label className="block text-sm font-medium text-gray-700 mb-1">SWIFT Code (Optional)</label>
+                                    <input
+                                        type="text"
+                                        name="swiftCode"
+                                        value={settings.swiftCode}
+                                        onChange={handleChange}
+                                        className="w-full border rounded-lg px-3 py-2 font-mono uppercase"
+                                        placeholder="Enter SWIFT Code"
+                                    />
+                                </div>
                             </div>
                             <div>
                                 <label className="block text-sm font-medium text-gray-700 mb-1">Branch Name (Optional)</label>
