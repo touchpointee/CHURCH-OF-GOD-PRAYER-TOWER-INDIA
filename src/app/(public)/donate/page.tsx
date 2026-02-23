@@ -1,16 +1,16 @@
 import dbConnect from "@/lib/db";
-import DonationSettings from "@/models/DonationSettings";
+import DonationPoster from "@/models/DonationPoster";
 import DonateContent from "./DonateContent";
 
 export const dynamic = "force-dynamic";
 
-async function getDonationSettings() {
+async function getDonationPosters() {
   await dbConnect();
-  const settings = await DonationSettings.findOne();
-  return settings ? JSON.parse(JSON.stringify(settings)) : null;
+  const posters = await DonationPoster.find({}).sort({ order: 1, createdAt: 1 });
+  return posters.map((p) => JSON.parse(JSON.stringify(p)));
 }
 
 export default async function DonatePage() {
-  const donation = await getDonationSettings();
-  return <DonateContent donation={donation} />;
+  const posters = await getDonationPosters();
+  return <DonateContent posters={posters} />;
 }

@@ -64,6 +64,37 @@ a {
   animation: fadeIn 0.8s var(--ease-out) forwards;
 }
 
+/* Header sky animation */
+@keyframes skyShift {
+  0%, 100% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+}
+
+.header-sky {
+  background: linear-gradient(
+    120deg,
+    #87ceeb 0%,
+    #b0e0e6 25%,
+    #e0f6ff 50%,
+    #b8d4e3 75%,
+    #87ceeb 100%
+  );
+  background-size: 200% 200%;
+  animation: skyShift 15s ease-in-out infinite;
+}
+
+/* Header marble background */
+.header-marble {
+  background-image: url('/header-marble-bg.png');
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+}
+
 /* Scrollbar */
 ::-webkit-scrollbar {
   width: 8px;
