@@ -20,6 +20,7 @@ export default function AdminSidebar({ isOpen, onClose }: SidebarProps) {
         { nameKey: 'admin.events', href: '/admin/events', icon: Calendar },
         { nameKey: 'admin.videos', href: '/admin/videos', icon: Video },
         { nameKey: 'admin.gallery', href: '/admin/gallery', icon: ImageIcon },
+        { nameKey: 'admin.charity', href: '/admin/charity', icon: Heart },
         { nameKey: 'admin.aboutUs', href: '/admin/about', icon: Info },
         { nameKey: 'admin.history', href: '/admin/history', icon: HistoryIcon },
         { nameKey: 'admin.contact', href: '/admin/contact', icon: Mail },

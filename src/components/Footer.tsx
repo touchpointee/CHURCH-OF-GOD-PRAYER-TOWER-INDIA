@@ -108,6 +108,7 @@ export default function Footer() {
                         <ul className="space-y-4 text-sm text-gray-400 font-sans">
                             {[
                                 { nameKey: 'footer.gallery', path: '/gallery' },
+                                { nameKey: 'footer.charity', path: '/charity' },
                                 { nameKey: 'footer.videos', path: '/videos' },
                                 { nameKey: 'footer.prayerRequest', path: '/prayer-request' },
                                 { nameKey: 'footer.donate', path: '/donate' },

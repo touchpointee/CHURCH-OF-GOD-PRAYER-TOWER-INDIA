@@ -94,6 +94,7 @@ export default function Header() {
                             { key: 'nav.events', path: '/events' },
                             { key: 'nav.videos', path: '/videos' },
                             { key: 'nav.gallery', path: '/gallery' },
+                            { key: 'nav.charity', path: '/charity' },
                             { key: 'nav.contact', path: '/contact' },
                             { key: 'nav.prayerRequest', path: '/prayer-request' },
                         ].map((item) => {
@@ -217,6 +218,7 @@ export default function Header() {
                                 { key: "nav.events", path: "/events" },
                                 { key: "nav.videos", path: "/videos" },
                                 { key: "nav.gallery", path: "/gallery" },
+                                { key: "nav.charity", path: "/charity" },
                                 { key: "nav.contact", path: "/contact" },
                                 { key: "nav.prayerRequest", path: "/prayer-request" },
                             ].map((item, idx) => {
