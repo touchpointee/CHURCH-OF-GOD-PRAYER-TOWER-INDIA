@@ -22,6 +22,10 @@ export default function Header() {
     const [isLangOpen, setIsLangOpen] = useState(false);
     const [langDropdownStyle, setLangDropdownStyle] = useState({ top: 0, right: 0 });
     const langButtonRef = useRef<HTMLButtonElement>(null);
+    const [isAboutOpen, setIsAboutOpen] = useState(false);
+    const [aboutDropdownStyle, setAboutDropdownStyle] = useState({ top: 0, left: 0 });
+    const aboutButtonRef = useRef<HTMLButtonElement>(null);
+    const aboutCloseTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
     const pathname = usePathname();
     const [socialUrls, setSocialUrls] = useState({ facebookUrl: '', youtubeUrl: '', instagramUrl: '' });
 
@@ -45,6 +49,38 @@ export default function Header() {
             window.removeEventListener("resize", updatePosition);
         };
     }, [isLangOpen]);
+
+    useEffect(() => {
+        if (!isAboutOpen || typeof document === "undefined") return;
+        const updatePosition = () => {
+            const btn = aboutButtonRef.current;
+            if (btn) {
+                const rect = btn.getBoundingClientRect();
+                setAboutDropdownStyle({
+                    top: rect.bottom + 8,
+                    left: rect.left,
+                });
+            }
+        };
+        updatePosition();
+        window.addEventListener("scroll", updatePosition, true);
+        window.addEventListener("resize", updatePosition);
+        return () => {
+            window.removeEventListener("scroll", updatePosition, true);
+            window.removeEventListener("resize", updatePosition);
+        };
+    }, [isAboutOpen]);
+
+    const clearAboutCloseTimeout = () => {
+        if (aboutCloseTimeoutRef.current) {
+            clearTimeout(aboutCloseTimeoutRef.current);
+            aboutCloseTimeoutRef.current = null;
+        }
+    };
+    const scheduleAboutClose = () => {
+        clearAboutCloseTimeout();
+        aboutCloseTimeoutRef.current = setTimeout(() => setIsAboutOpen(false), 150);
+    };
 
     useEffect(() => {
         const fetchSocials = async () => {
@@ -101,13 +137,26 @@ export default function Header() {
                             if (item.isAbout) {
                                 const isAboutActive = ['/about-us', '/history', '/statement-of-faith'].includes(pathname);
                                 return (
-                                    <div key={item.key} className="relative group h-full flex items-center">
-                                        <button className={`flex items-center gap-1 transition-colors duration-300 py-2 focus:outline-none ${isAboutActive ? 'text-violet-200' : 'text-white/80 hover:text-white'}`}>
+                                    <div
+                                        key={item.key}
+                                        className="relative h-full flex items-center"
+                                        onMouseEnter={() => { clearAboutCloseTimeout(); setIsAboutOpen(true); }}
+                                        onMouseLeave={scheduleAboutClose}
+                                    >
+                                        <button
+                                            ref={aboutButtonRef}
+                                            className={`flex items-center gap-1 transition-colors duration-300 py-2 focus:outline-none ${isAboutActive ? 'text-violet-200' : 'text-white/80 hover:text-white'}`}
+                                        >
                                             {t(item.key)}
-                                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="lucide lucide-chevron-down w-4 h-4 transition-transform duration-300 group-hover:rotate-180"><path d="m6 9 6 6 6-6" /></svg>
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={`w-4 h-4 transition-transform duration-300 ${isAboutOpen ? 'rotate-180' : ''}`}><path d="m6 9 6 6 6-6" /></svg>
                                         </button>
-                                        <div className="absolute left-0 top-full pt-4 w-56 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 transform translate-y-2 group-hover:translate-y-0 z-[100]">
-                                            <div className="bg-white rounded-xl shadow-xl border border-gray-100 overflow-hidden py-2">
+                                        {isAboutOpen && typeof document !== "undefined" && createPortal(
+                                            <div
+                                                className="fixed w-56 bg-white rounded-xl shadow-xl border border-gray-100 overflow-hidden py-2 z-[9999]"
+                                                style={{ top: aboutDropdownStyle.top, left: aboutDropdownStyle.left }}
+                                                onMouseEnter={clearAboutCloseTimeout}
+                                                onMouseLeave={scheduleAboutClose}
+                                            >
                                                 {[
                                                     { nameKey: 'nav.whoWeAre', href: '/about-us' },
                                                     { nameKey: 'nav.ourHistory', href: '/history' },
@@ -119,13 +168,15 @@ export default function Header() {
                                                             key={subItem.nameKey}
                                                             href={subItem.href}
                                                             className={`block px-6 py-3 text-sm transition-colors duration-200 ${isSubActive ? 'text-accent bg-violet-50 font-bold' : 'text-gray-600 hover:text-accent hover:bg-gray-50'}`}
+                                                            onClick={() => setIsAboutOpen(false)}
                                                         >
                                                             {t(subItem.nameKey)}
                                                         </Link>
                                                     );
                                                 })}
-                                            </div>
-                                        </div>
+                                            </div>,
+                                            document.body
+                                        )}
                                     </div>
                                 );
                             }
