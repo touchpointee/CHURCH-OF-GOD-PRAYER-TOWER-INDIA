@@ -63,12 +63,11 @@ export default function ContactPage() {
 
     return (
         <div className="min-h-screen bg-white font-sans">
-            {/* Content Grid */}
+            {/* Content: address first, then send message form below */}
             <div className="container mx-auto px-4 py-16 relative z-20">
-                <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 shadow-2xl rounded-3xl overflow-hidden bg-white">
-
-                    {/* Contact Info & Map */}
-                    <div className="bg-gray-50 text-gray-900 p-10 md:p-14 flex flex-col justify-between border-r border-gray-100">
+                <div className="flex flex-col gap-8 max-w-4xl mx-auto">
+                    {/* Contact Info / Address Box */}
+                    <div className="bg-gray-50 text-gray-900 p-10 md:p-14 rounded-3xl shadow-2xl border border-gray-100">
                         <div>
                             <h2 className="text-3xl font-display font-bold mb-6 text-gray-900">{t("contact.title")}</h2>
                             <p className="text-gray-500 mb-10">{t("contact.subtitle")}</p>
@@ -116,8 +115,8 @@ export default function ContactPage() {
                         </div>
                     </div>
 
-                    {/* Form */}
-                    <div className="p-10 md:p-14 bg-white">
+                    {/* Send a message form (below address) */}
+                    <div className="p-10 md:p-14 bg-white rounded-3xl shadow-2xl border border-gray-100">
                         <h2 className="text-3xl font-bold text-gray-800 mb-2 font-display">{t("contact.sendMessage")}</h2>
                         <p className="text-gray-500 mb-8">{t("contact.weAreHere")}</p>
 
