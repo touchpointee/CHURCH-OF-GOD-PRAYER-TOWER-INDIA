@@ -15,8 +15,19 @@ export default function AdminContactPage() {
     // Location Form
     const [isEditing, setIsEditing] = useState(false);
     const [editingId, setEditingId] = useState<string | null>(null);
-    const { register, handleSubmit, reset, setValue } = useForm({
-        defaultValues: { mapUrl: '' },
+    type LocationFormData = {
+        name: string; nameHi: string; nameMl: string;
+        address: string; addressHi: string; addressMl: string;
+        details: string; detailsHi: string; detailsMl: string;
+        mapUrl: string;
+    };
+    const { register, handleSubmit, reset, setValue } = useForm<LocationFormData>({
+        defaultValues: {
+            name: '', nameHi: '', nameMl: '',
+            address: '', addressHi: '', addressMl: '',
+            details: '', detailsHi: '', detailsMl: '',
+            mapUrl: '',
+        },
     });
 
     useEffect(() => {
