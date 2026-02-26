@@ -10,6 +10,11 @@ const LocationSchema = new mongoose.Schema({
     details: { type: String },
     detailsHi: { type: String },
     detailsMl: { type: String },
+    mapUrl: { type: String, default: '' }, // Google Maps link for this address
 }, { timestamps: true });
 
-export default mongoose.models.Location || mongoose.model('Location', LocationSchema);
+// Avoid using a cached model that might not have mapUrl (e.g. from before schema change)
+if (mongoose.models.Location) {
+    delete mongoose.models.Location;
+}
+export default mongoose.model('Location', LocationSchema);

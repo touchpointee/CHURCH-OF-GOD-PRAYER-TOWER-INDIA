@@ -15,7 +15,9 @@ export default function AdminContactPage() {
     // Location Form
     const [isEditing, setIsEditing] = useState(false);
     const [editingId, setEditingId] = useState<string | null>(null);
-    const { register, handleSubmit, reset, setValue } = useForm();
+    const { register, handleSubmit, reset, setValue } = useForm({
+        defaultValues: { mapUrl: '' },
+    });
 
     useEffect(() => {
         if (activeTab === 'locations') fetchLocations();
@@ -48,10 +50,22 @@ export default function AdminContactPage() {
 
     const onSubmitLocation = async (data: any) => {
         try {
+            const payload = {
+                name: data.name ?? '',
+                nameHi: data.nameHi ?? '',
+                nameMl: data.nameMl ?? '',
+                address: data.address ?? '',
+                addressHi: data.addressHi ?? '',
+                addressMl: data.addressMl ?? '',
+                details: data.details ?? '',
+                detailsHi: data.detailsHi ?? '',
+                detailsMl: data.detailsMl ?? '',
+                mapUrl: (typeof data.mapUrl === 'string' ? data.mapUrl.trim() : '') || '',
+            };
             if (isEditing && editingId) {
-                await axios.put(`/api/contact/locations/${editingId}`, data);
+                await axios.put(`/api/contact/locations/${editingId}`, payload);
             } else {
-                await axios.post('/api/contact/locations', data);
+                await axios.post('/api/contact/locations', payload);
             }
             fetchLocations();
             resetForm();
@@ -73,6 +87,7 @@ export default function AdminContactPage() {
         setValue('details', location.details);
         setValue('detailsHi', location.detailsHi ?? '');
         setValue('detailsMl', location.detailsMl ?? '');
+        setValue('mapUrl', location.mapUrl ?? '');
     };
 
     const handleDeleteLocation = async (id: string) => {
@@ -107,7 +122,7 @@ export default function AdminContactPage() {
     const resetForm = () => {
         setIsEditing(false);
         setEditingId(null);
-        reset({ name: '', nameHi: '', nameMl: '', address: '', addressHi: '', addressMl: '', details: '', detailsHi: '', detailsMl: '' });
+        reset({ name: '', nameHi: '', nameMl: '', address: '', addressHi: '', addressMl: '', details: '', detailsHi: '', detailsMl: '', mapUrl: '' });
     };
 
     return (
@@ -161,10 +176,16 @@ export default function AdminContactPage() {
                                 <div>
                                     <h3 className="font-bold text-lg text-gray-900">{loc.name}</h3>
                                     <p className="text-gray-600 mb-2">{loc.address}</p>
+                                    <div className="flex items-center gap-2 mb-2">
+                                        <MapPin size={14} className="text-gray-400 shrink-0" />
+                                        <span className="text-xs text-gray-500">
+                                            Address map link: {loc.mapUrl ? <span className="text-green-600 font-medium">Set</span> : <span className="italic">Not set</span>}
+                                        </span>
+                                    </div>
                                     <div className="text-sm text-gray-500 whitespace-pre-wrap bg-gray-50 p-3 rounded-lg">{loc.details}</div>
                                 </div>
                                 <div className="flex gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
-                                    <button onClick={() => handleEdit(loc)} className="p-2 text-blue-600 hover:bg-blue-50 rounded-lg"><Edit2 size={18} /></button>
+                                    <button onClick={() => handleEdit(loc)} className="p-2 text-blue-600 hover:bg-blue-50 rounded-lg" title="Edit (includes address map link)"><Edit2 size={18} /></button>
                                     <button onClick={() => handleDeleteLocation(loc._id)} className="p-2 text-red-600 hover:bg-red-50 rounded-lg"><Trash2 size={18} /></button>
                                 </div>
                             </div>
@@ -211,6 +232,14 @@ export default function AdminContactPage() {
                             <div>
                                 <label className="block text-sm font-bold text-gray-700 mb-1">Details (Malayalam)</label>
                                 <textarea {...register('detailsMl')} rows={4} className="w-full border rounded-lg p-2" placeholder="മലയാളത്തിൽ വിവരണം" />
+                            </div>
+                            <div className="border-t border-gray-200 pt-4">
+                                <label className="flex items-center gap-2 text-sm font-bold text-gray-700 mb-1">
+                                    <MapPin size={16} className="text-primary" />
+                                    Address map link (optional) — per location
+                                </label>
+                                <input {...register('mapUrl')} type="text" className="w-full border rounded-lg p-2" placeholder="Paste Google Maps link for this address (e.g. https://maps.google.com/...)" />
+                                <p className="text-xs text-gray-500 mt-1">Each location can have its own map link. Shown on the contact page as &quot;View on map&quot; for this address.</p>
                             </div>
                             <div className="flex gap-2 pt-2">
                                 <button type="submit" className="flex-1 bg-primary text-white font-bold py-2 rounded-lg hover:bg-primary-dark transition-colors">

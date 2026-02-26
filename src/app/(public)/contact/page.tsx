@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react";
 import axios from "axios";
-import { Mail, Phone, Send } from "lucide-react";
+import { Mail, Phone, Send, MapPin } from "lucide-react";
 import { useForm } from "react-hook-form";
 import { useLanguage } from "@/contexts/LanguageContext";
 
@@ -77,6 +77,11 @@ export default function ContactPage() {
                                     <div key={location._id} className="p-4 bg-white rounded-xl border border-gray-100 shadow-sm">
                                         <h4 className="font-bold text-gray-900 uppercase tracking-widest mb-2 border-b border-gray-100 pb-2">{location.name}</h4>
                                         <p className="text-gray-600 mb-1 font-medium">{location.address}</p>
+                                        {location.mapUrl && (
+                                            <a href={location.mapUrl} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-2 mt-2 text-accent font-medium hover:underline text-sm">
+                                                <MapPin size={16} /> {t("contact.viewOnMap")}
+                                            </a>
+                                        )}
                                         {location.details && (
                                             <div className="text-sm text-gray-500 space-y-1 mt-3 whitespace-pre-wrap">
                                                 {location.details}
