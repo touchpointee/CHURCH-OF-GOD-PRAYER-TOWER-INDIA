@@ -15,7 +15,7 @@ const transporter = nodemailer.createTransport({
 
 const FROM_EMAIL = process.env.SMTP_FROM_EMAIL || 'contact@touchpointe.digital';
 const FROM_NAME = process.env.SMTP_FROM_NAME || 'Church of God Prayer Tower';
-const TO_EMAIL = 'ajmalj2003@gmail.com'; // Admin email to receive notifications
+const TO_EMAIL = process.env.SMTP_TO_EMAIL || 'cogptindia@gmail.com'; // Admin email to receive notifications
 
 const logoPath = path.join(process.cwd(), 'public', 'logo.jpg');
 
