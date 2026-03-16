@@ -1,12 +1,17 @@
 import { NextResponse } from 'next/server';
 import dbConnect from '@/lib/db';
 import ContactMessage from '@/models/ContactMessage';
+import { sendContactNotification } from '@/lib/emailService';
 
 export async function POST(req: Request) {
     await dbConnect();
     try {
         const body = await req.json();
         const message = await ContactMessage.create(body);
+        
+        // Send email notification
+        await sendContactNotification(body).catch(err => console.error("Email error:", err));
+        
         return NextResponse.json({ success: true, data: message });
     } catch (error) {
         return NextResponse.json({ success: false, error: 'Failed to send message' }, { status: 400 });

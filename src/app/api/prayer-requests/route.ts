@@ -1,12 +1,17 @@
 import { NextResponse } from 'next/server';
 import dbConnect from '@/lib/dbConnect';
 import PrayerRequest from '@/models/PrayerRequest';
+import { sendPrayerRequestNotification } from '@/lib/emailService';
 
 export async function POST(req: Request) {
     await dbConnect();
     try {
         const body = await req.json();
         const request = await PrayerRequest.create(body);
+        
+        // Send email notification
+        await sendPrayerRequestNotification(body).catch(err => console.error("Email error:", err));
+        
         return NextResponse.json({ success: true, data: request });
     } catch (error) {
         return NextResponse.json({ success: false, error: 'Failed to submit prayer request' }, { status: 400 });
